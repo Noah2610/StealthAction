@@ -60,3 +60,10 @@ br {
 	padding-bottom: 16px;
 }
 
+/* Textarea with calculated level-data json */
+#level_data {
+
+	display: block;
+	width: 100%;
+}
+

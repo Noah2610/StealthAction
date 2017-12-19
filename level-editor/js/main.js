@@ -49,6 +49,8 @@ function current_block() {
 }
 
 function save_level() {
+	$('#level_data').remove();
+
 	const blocks_el = $('#blocks').children('.block');
 	var blocks = [];
 
@@ -62,8 +64,16 @@ function save_level() {
 		});
 	});
 
-	copy_to_clipboard(JSON.stringify(blocks));
-	//$('body').text(JSON.stringify(blocks));
+	const data = JSON.stringify(blocks);
+	// Copy level data to clipboard
+	copy_to_clipboard(data);
+	// Create textarea with level data
+	const data_el = $(document.createElement('textarea'));
+		data_el.attr("id", "level_data");
+		data_el.attr("rows", "20");
+		data_el.text(data);
+	$('#panel').append(data_el);
+
 }
 
 $(document).ready(function () {
