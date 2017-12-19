@@ -1,19 +1,4 @@
 
-
-class ::Integer
-	def sign
-		return (self / self.abs)  unless (self == 0)
-		return self
-	end
-end
-class ::Float
-	def sign
-		return (self / self.abs)  unless (self == 0.0)
-		return self
-	end
-end
-
-
 class Game < Gosu::Window
 	attr_reader :room
 
@@ -53,12 +38,12 @@ class Game < Gosu::Window
 		dirs = []
 		$settings.controls(:player)[:movement].each do |k,v|
 			dirs << k  if (v.map { |id| Gosu.button_down? id } .any?)
-		end                      if ($update_counter % 4 == 0)
+		end                      if ($update_counter % 2 == 0)
 		sneak = $settings.controls(:player)[:sneak].map { |sn| Gosu.button_down? sn } .any?
-		@player.move dirs, sneak
+		@player.move dirs, sneak, 6
 
 		# Update player
-		@player.update           if ($update_counter % 4 == 0)
+		#@player.update           if ($update_counter % 4 == 0)
 
 		# Update room
 		@room.update             if ($update_counter % 4 == 0)

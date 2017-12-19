@@ -10,8 +10,6 @@ class Instance
 
 		# Defaults
 		@z = 20
-		@draw_x = 0
-		@draw_y = 0
 		@bg = $settings.instances :bg
 
 		# Flags
@@ -37,26 +35,28 @@ class Instance
 		end
 	end
 
+	def draw_pos axis
+		case axis
+		when :x
+			return @room.draw_pos(:x) + @x
+		when :y
+			return @room.draw_pos(:y) + @y
+		else
+			return 0
+		end
+	end
+
 	def update
-		@draw_x = @room.draw_x + @x
-		@draw_y = @room.draw_y + @y
 
 		# Custom update function of child class
 		update_custom  if (defined? update_custom)
 	end
 
 	def draw
-		Gosu.draw_rect @draw_x, @draw_y, @w,@h, @bg, @z
+		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @bg, @z
 
 		# Custom draw function of child class
 		draw_custom  if (defined? draw_custom)
-	end
-end
-
-
-class TestInst < Instance
-	def init args = {}
-		@solid = true
 	end
 end
 

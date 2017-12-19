@@ -8,15 +8,13 @@ class Player
 
 		@z = 30
 		@c = $settings.colors(:blue)
-		@draw_x = 0
-		@draw_y = 0
-		@collision_padding = 24  # if only 8 pixels to a side are colliding and center is free, let the player move and adjust potition
+		@collision_padding = 8  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
 
 		@step = args[:step] || $settings.player(:step)
 	end
 
 	def collision? dir, x = @x, y = @y, w = @w, h = @h
-		$game.room.instances.each do |instance|
+		$game.room.solid_instances.each do |instance|
 			case dir
 			when :up
 				if (  ((y) <= instance.pos(:bottom))       &&
@@ -60,14 +58,10 @@ class Player
 		return false
 	end
 
-	def move dirs, sneak = false
+	def move dirs, sneak = false, step = @step
 		return  if dirs.empty?
 
-		if (sneak)
-			step = @step / 2
-		else
-			step = @step
-		end
+		step /= 2  if (sneak)
 
 		step.times do |s|
 			dirs.each do |dir|
@@ -140,14 +134,23 @@ class Player
 		#)
 	end
 
+	def draw_pos axis
+		case axis
+		when :x
+			return @x - $camera.x
+		when :y
+			return @y - $camera.y
+		else
+			return 0
+		end
+	end
+
 	def update
-		@draw_x = @x - $camera.x
-		@draw_y = @y - $camera.y
 	end
 
 	def draw
 		# Draw player
-		Gosu.draw_rect @draw_x, @draw_y, @w,@h, @c, @z
+		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
 	end
 end
 
