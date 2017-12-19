@@ -1,0 +1,7 @@
+
+z-indices:
+	game_bg:        0
+	room_bg:        10
+	instance_bg:    20
+	player:         30
+
