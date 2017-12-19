@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Level Editor - StealthAction</title>
+		<link rel="stylesheet" href="./style.css" />
+		<script type="text/javascript" src="./lib/jquery-3.2.1.min.js"></script>
+	</head>
+	<body>
+
+		<div id="grid">
+		</div>
+
+
+		<div id="panel">
+			<h3>StealthAction - Level Editor</h3>
+
+			<div class="panel__group" id="panel__grid_size">
+				<strong>Grid size:</strong><br />
+				<div>
+					w: <span id="panel__box_size__w"></span>
+				</div>
+				<div>
+					h: <span id="panel__box_size__h"></span>
+				</div>
+			</div>
+
+			<div class="panel__group" id="panel__block_size">
+				<strong>Block size:</strong><br />
+				<div>
+					w: <span id="panel__block_size__w"></span>
+				</div>
+				<div>
+					h: <span id="panel__block_size__h"></span>
+				</div>
+			</div>
+
+			<div class="panel__group" id="panel__block_offset">
+				<strong>Block offset:</strong><br />
+				<div>
+					x: <span id="panel__block_offset__x"></span>
+				</div>
+				<div>
+					y: <span id="panel__block_offset__y"></span>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="./js/main.js"></script>
+		<script type="text/javascript" src="./js/grid.js"></script>
+		<script type="text/javascript" src="./js/panel.js"></script>
+	</body>
+</html>
