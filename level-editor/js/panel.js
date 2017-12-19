@@ -65,10 +65,25 @@ function update_panel(panel) {
 	block_offset_el.y.val(settings.block_offset.y);
 }
 
+function populate_block_selector() {
+	const block_selector = $('#panel__block_selector select');
+	$.getJSON('./instances.json', function (json) {
+		const option = '<option value="REPLACEVALUE">REPLACENAME</option>';
+		json.forEach(function (name) {
+			block_selector.append(
+				option.replace("REPLACEVALUE", name)
+				      .replace("REPLACENAME", name)
+			);
+		});
+	});
+}
+
 $(document).ready(function () {
 
 	const panel = $('#panel')
 	init_panel(panel);
+
+	populate_block_selector();
 
 });
 

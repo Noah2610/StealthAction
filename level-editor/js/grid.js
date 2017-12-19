@@ -33,7 +33,6 @@ function handle_mousemove(event, highlight) {
 	const y = event.pageY;
 	const box_x = x - (x % settings.box_size.w);
 	const box_y = y - (y % settings.box_size.h);
-	console.log(x,y);
 
 	//const box_el = $('#grid .grid__box[data-x="'+ box_x +'"][data-y="'+ box_y +'"]');
 	
@@ -54,6 +53,8 @@ function handle_click(event, highlight) {
 		block.css("top", highlight.css("top"));
 		block.css("width", highlight.css("width"));
 		block.css("height", highlight.css("height"));
+		block.data("instance", current_block());
+		block.data("test", "testval");
 
 	block_wrapper.append(block);
 }

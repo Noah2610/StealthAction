@@ -21,6 +21,12 @@
 		<div id="panel">
 			<h3>StealthAction - Level Editor</h3>
 
+			<div class="panel__group" id="panel__block_selector">
+				<strong>Block:</strong><br />
+				<select id="panel__block_selector">
+				</select>
+			</div>
+
 			<div class="panel__group" id="panel__grid_size">
 				<strong>Box size (grid cell):</strong><br />
 				<div>
@@ -50,6 +56,8 @@
 					y: <input type="text" id="panel__block_offset__y"></input>
 				</div>
 			</div>
+
+			<input type="button" id="save_btn" value="Save Level" />
 		</div>
 
 		<script type="text/javascript" src="./js/main.js"></script>
