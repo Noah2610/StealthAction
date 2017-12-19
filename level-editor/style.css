@@ -15,10 +15,12 @@ br {
 	display: inline-block;
 	margin: 0;
 	padding: 0;
-	border: 2px solid black;
 	width: 960px;
 	height: 640px;
 	font-size: 0;
+	-webkit-box-shadow: inset 0px 0px 0px 2px #000;
+	-moz-box-shadow: inset 0px 0px 0px 2px #000;
+	box-shadow: inset 0px 0px 0px 2px #000;
 }
 
 .grid__box {
@@ -29,7 +31,11 @@ br {
 	-webkit-box-shadow: inset 0px 0px 0px 1px #000;
 	-moz-box-shadow: inset 0px 0px 0px 1px #000;
 	box-shadow: inset 0px 0px 0px 1px #000;
+}
 
+#grid__block__highlight {
+	position: absolute;
+	background-color: #999;
 }
 
 
@@ -37,7 +43,7 @@ br {
 	float: right;
 	display: inline-block;
 	width: 400px;
-	height: 640px;
+	/* height: 640px; */
 	border: 2px solid black;
 	padding: 8px;
 }

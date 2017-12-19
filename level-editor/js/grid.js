@@ -1,5 +1,14 @@
 
-function gen_grid(grid) {
+function update_highlight(highlight) {
+	highlight.css("width", settings.block_size.w);
+	highlight.css("height", settings.block_size.h);
+	highlight.css("left", highlight.data("x") + settings.block_offset.x);
+	highlight.css("top", highlight.data("y") + settings.block_offset.y);
+}
+
+function update_grid(grid) {
+	grid.empty();
+
 	const box_w = settings.box_size.w;
 	const box_h = settings.box_size.h;
 	const style = 'width: '+ box_w +'px; height: '+ box_h +'px;';
@@ -19,17 +28,28 @@ function gen_grid(grid) {
 	}
 }
 
-function handle_mouse(event) {
-	const x = event.clientX;
-	const y = event.clientY;
-	const box_x = event.clientX - (event.clientX % settings.box_size.x);
+function handle_mousemove(event, highlight) {
+	const x = event.pageX;
+	const y = event.pageY;
+	const box_x = x - (x % settings.box_size.w);
+	const box_y = y - (y % settings.box_size.h);
+
+	//const box_el = $('#grid .grid__box[data-x="'+ box_x +'"][data-y="'+ box_y +'"]');
+	
+	highlight.data("x", box_x);
+	highlight.data("y", box_y);
+	update_highlight(highlight);
 }
 
 $(document).ready(function () {
 
 	const grid = $('#grid');
+	const highlight = $('#grid__block__highlight');
+	update_highlight(highlight);
 
-	gen_grid(grid);
-	grid.get(0).addEventListener("mousemove", handle_mouse);
+	update_grid(grid);
+	grid.get(0).addEventListener("mousemove", function (event) {
+		handle_mousemove(event, highlight);
+	});
 
 });
