@@ -11,7 +11,7 @@ br {
 	padding: 0;
 }
 
-#grid {
+#grid_wrapper {
 	display: inline-block;
 	margin: 0;
 	padding: 0;
@@ -21,6 +21,9 @@ br {
 	-webkit-box-shadow: inset 0px 0px 0px 2px #000;
 	-moz-box-shadow: inset 0px 0px 0px 2px #000;
 	box-shadow: inset 0px 0px 0px 2px #000;
+}
+
+#grid {
 }
 
 .grid__box {
@@ -35,7 +38,12 @@ br {
 
 #grid__block__highlight {
 	position: absolute;
-	background-color: #999;
+	background-color: #cccccc;
+}
+
+.block {
+	position: absolute;
+	background-color: #999999;
 }
 
 

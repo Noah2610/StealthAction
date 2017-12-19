@@ -33,23 +33,43 @@ function handle_mousemove(event, highlight) {
 	const y = event.pageY;
 	const box_x = x - (x % settings.box_size.w);
 	const box_y = y - (y % settings.box_size.h);
+	console.log(x,y);
 
 	//const box_el = $('#grid .grid__box[data-x="'+ box_x +'"][data-y="'+ box_y +'"]');
 	
-	highlight.data("x", box_x);
-	highlight.data("y", box_y);
-	update_highlight(highlight);
+	if ((x >= 0 && x < settings.screen.w) &&
+		  (y >= 0 && y < settings.screen.h)) {
+		highlight.data("x", box_x);
+		highlight.data("y", box_y);
+		update_highlight(highlight);
+	}
+}
+
+function handle_click(event, highlight) {
+	const block_wrapper = $('#blocks');
+
+	var block = $(document.createElement('span'));
+		block.addClass("grid__box block");
+		block.css("left", highlight.css("left"));
+		block.css("top", highlight.css("top"));
+		block.css("width", highlight.css("width"));
+		block.css("height", highlight.css("height"));
+
+	block_wrapper.append(block);
 }
 
 $(document).ready(function () {
 
+	const grid_wrapper = $('#grid_wrapper');
 	const grid = $('#grid');
 	const highlight = $('#grid__block__highlight');
 	update_highlight(highlight);
-
 	update_grid(grid);
-	grid.get(0).addEventListener("mousemove", function (event) {
+	grid_wrapper.get(0).addEventListener("mousemove", function (event) {
 		handle_mousemove(event, highlight);
 	});
 
+	grid_wrapper.get(0).addEventListener("click", function (event) {
+		handle_click(event, highlight);
+	});
 });
