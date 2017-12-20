@@ -39,15 +39,22 @@ class Game < Gosu::Window
 		level = nil
 		level_dir = File.join dir, name.to_s
 		if (File.directory? level_dir)
-			config = nil
+			# Load config.yml
+			config_path = File.join level_dir, "config.yml"
+			if (File.file? config_path)
+				config = YAML.load_file config_path
+			else
+				config = nil
+			end
 			rooms = {}
-			Dir.new(level_dir).map do |file|
-				next nil  if (file =~ /\A\.{1,2}\z/)
-				filepath = File.join level_dir, file
-				if (file =~ /\A\S+\.json\z/)  # Is room json file
-					rooms[file.sub(/\.json\z/,"").to_sym] = JSON.parse(File.read(filepath))
-				elsif (file == "config.yml")  # Is level config yaml file
-					config = YAML.load_file filepath
+			# Load rooms json
+			rooms_dir = File.join level_dir, "rooms"
+			if (File.directory? rooms_dir)
+				Dir.new(rooms_dir).map do |file|
+					next nil  if (file =~ /\A\.{1,2}\z/)
+					filepath = File.join rooms_dir, file
+					# Load room data json
+					rooms[file.sub(/\.json\z/,"").to_sym] = JSON.parse(File.read(filepath))  if (file =~ /\A\S+\.json\z/)
 				end
 			end
 			level = Level.new(
