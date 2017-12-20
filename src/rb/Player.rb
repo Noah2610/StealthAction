@@ -1,5 +1,7 @@
 
 class Player
+	attr_reader :x,:y
+
 	def initialize args = {}
 		@x = args[:x] || $settings.screen(:w) / 2
 		@y = args[:y] || $settings.screen(:h) / 2
@@ -8,7 +10,8 @@ class Player
 
 		@z = 30
 		@c = $settings.colors(:blue)
-		@collision_padding = 8  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
+		@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
+		@step_sneak = $settings.player(:step_sneak)
 
 		@step = args[:step] || $settings.player(:step)
 	end
@@ -61,9 +64,9 @@ class Player
 	def move dirs, sneak = false, step = @step
 		return  if dirs.empty?
 
-		step /= 2  if (sneak)
+		step *= @step_sneak  if (sneak)
 
-		step.times do |s|
+		step.round.times do |s|
 			dirs.each do |dir|
 				unless (collision? dir)
 					case dir

@@ -5,8 +5,8 @@ class Room
 	def initialize args = {}
 		@x = args[:x] || 0
 		@y = args[:y] || 0
-		@w = args[:w] || $settings.screen(:w)
-		@h = args[:h] || $settings.screen(:h)
+		@w = args[:w] || $settings.rooms(:w)
+		@h = args[:h] || $settings.rooms(:h)
 		@instances = args[:instances] || []
 
 		@instances.each { |inst| inst.set_room self }

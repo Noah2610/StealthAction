@@ -9,8 +9,8 @@ class Level
 				Room.new(
 					x: 0,
 					y: 0,
-					w: $settings.screen(:w),
-					h: $settings.screen(:h),
+					#w: $settings.rooms(:w),
+					#h: $settings.rooms(:h),
 					instances: instances
 				)
 			]

@@ -31,11 +31,18 @@ class Settings
 					w: 32,
 					h: 32
 				},
-				step: 8
+				step: 6,
+				step_sneak: 0.4,    # times regular step
+				collision_padding: 8
+			},
+
+			rooms: {
+				w: 960,
+				h: 640
 			},
 
 			camera: {
-				step:  16
+				step:  2
 			}
 		}
 
@@ -93,6 +100,12 @@ class Settings
 		case target
 		when :bg
 			return @resources[:colors][:gray]
+		when :w, :width
+			return @settings[:rooms][:w]
+		when :h, :height
+			return @settings[:rooms][:h]
+		else
+			return nil
 		end
 	end
 

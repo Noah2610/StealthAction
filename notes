@@ -5,3 +5,7 @@ z-indices:
 	instance_bg:    20
 	player:         30
 
+TODO:
+	- enemies, items, floors, ...
+	- movement velocity
+

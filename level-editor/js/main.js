@@ -1,8 +1,12 @@
 
 const default_settings = {
 	screen: {
-		w: 960,
-		h: 640
+		w: 2000, // 960
+		h: 1500  // 640
+	},
+	screen: {
+		w: parseInt($('#grid_wrapper').css("width")),
+		h: parseInt($('#grid_wrapper').css("height"))
 	},
 	box_size: {
 		w: 32, h: 32

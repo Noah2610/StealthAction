@@ -1,1 +1,1 @@
-nnoremap <leader>r :!./StealthAction.rb<CR>
+nnoremap <leader>r :!./StealthAction.rb 
