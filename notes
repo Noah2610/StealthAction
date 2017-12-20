@@ -8,4 +8,9 @@ z-indices:
 TODO:
 	- enemies, items, floors, ...
 	- movement velocity
+Level-Editor:
+	- loading levels
+	- web server
+		- save level on server
+		- prompt user for download
 
