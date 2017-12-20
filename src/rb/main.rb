@@ -18,18 +18,13 @@ class Game < Gosu::Window
 	### Initialize all game objects, after $game has been set
 	def init
 		## Preload all levels
-		@levels = load_levels DIR[:levels]
+		#@levels = load_levels DIR[:levels]
 
-=begin
-		@room = TestRm.new(
-			x: -100,
-			y: -100,
-			w: 500,
-			h: 500
-		)
-=end
+		## Only load one level
+		@level = load_level @level_name
 
-		@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
+		#@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
+		@room = @level.get_room(:sample)
 
 		## Add player
 		#@player = Player.new x: 1700, y: 1250
@@ -38,17 +33,29 @@ class Game < Gosu::Window
 		$camera.move_to x: (@player.x - ($settings.screen(:w) / 2)), y: (@player.y - ($settings.screen(:h) / 2))
 	end
 
-	def load_levels dir = DIR[:levels]
+	def load_level name, dir = DIR[:levels]
+		return nil  if (name.nil?)
 		return nil  unless (Dir.exists? dir)
-		levels = {}
-		Dir.new(dir).each do |file|
-			next  if (file =~ /\A\.{1,2}\z/)
-			if (file =~ /\A\S+\.json\z/)
-				content = JSON.parse(File.read(File.join(dir, file)))
-				levels[file.sub(/\.json\Z/,"").to_sym] = Level.new(data: content)
+		level = nil
+		level_dir = File.join dir, name.to_s
+		if (File.directory? level_dir)
+			config = nil
+			rooms = {}
+			Dir.new(level_dir).map do |file|
+				next nil  if (file =~ /\A\.{1,2}\z/)
+				filepath = File.join level_dir, file
+				if (file =~ /\A\S+\.json\z/)  # Is room json file
+					rooms[file.sub(/\.json\z/,"").to_sym] = JSON.parse(File.read(filepath))
+				elsif (file == "config.yml")  # Is level config yaml file
+					config = YAML.load_file filepath
+				end
 			end
+			level = Level.new(
+				rooms:  rooms,
+				config: config
+			)
 		end
-		return levels
+		return level
 	end
 
 	def button_down id

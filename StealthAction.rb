@@ -2,6 +2,7 @@
 
 require 'gosu'
 require 'json'
+require 'yaml'
 require 'byebug'
 
 dir = "#{File.dirname(__FILE__)}"

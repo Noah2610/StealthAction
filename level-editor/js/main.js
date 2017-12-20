@@ -60,24 +60,44 @@ function save_level() {
 
 	blocks_el.each(function (index) {
 		blocks.push({
-			x:    $(this).css("left"),
-			y:    $(this).css("top"),
-			w:    $(this).css("width"),
-			h:    $(this).css("height"),
+			x:    parseInt($(this).css("left")),
+			y:    parseInt($(this).css("top")),
+			w:    parseInt($(this).css("width")),
+			h:    parseInt($(this).css("height")),
 			type: $(this).data("instance")
 		});
 	});
 
-	const data = JSON.stringify(blocks);
+	const data = {
+		instances: blocks
+	}
+	const data_string = JSON.stringify(data);
 	// Copy level data to clipboard
-	copy_to_clipboard(data);
+	copy_to_clipboard(data_string);
 	// Create textarea with level data
 	const data_el = $(document.createElement('textarea'));
 		data_el.attr("id", "level_data");
 		data_el.attr("rows", "20");
-		data_el.text(data);
+		data_el.text(data_string);
 	$('#panel').append(data_el);
 
+	// Get level name
+	var name = $('#level_name').val();
+	if (name.search(/\.json$/) == -1) {
+		name += ".json";
+	}
+
+	// Prompt user for download
+	download_json(data, name);
+}
+
+// https://stackoverflow.com/a/30800715
+function download_json(exportObj, exportName){
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+	var dlAnchorElem = document.getElementById('download_level');
+	dlAnchorElem.setAttribute("href",     dataStr     );
+	dlAnchorElem.setAttribute("download", exportName);
+	dlAnchorElem.click();
 }
 
 $(document).ready(function () {

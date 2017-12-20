@@ -1,23 +1,29 @@
 
 class Level
-	attr_reader :rooms
-
 	def initialize args = {}
-		if (args[:data])
-			instances = get_instances args[:data]
-			@rooms = [
-				Room.new(
-					x: 0,
-					y: 0,
-					#w: $settings.rooms(:w),
-					#h: $settings.rooms(:h),
-					instances: instances
-				)
-			]
+		if (args[:rooms])
+			@rooms = gen_rooms args[:rooms]
+		else
+			@rooms = nil
 		end
 	end
 
-	def get_instances json
+	def get_room name
+		return @rooms.to_a.sample[1]  if (name == :random || name == :sample)
+		return @rooms[name]           unless (@rooms[name].nil?)
+	end
+
+	def gen_rooms rooms_json
+		rooms = {}
+		rooms_json.each do |name, json|
+			rooms[name] = Room.new(
+				instances: gen_instances(json["instances"])
+			)
+		end
+		return rooms
+	end
+
+	def gen_instances json
 		instances = []
 		json.each do |instance|
 			if (class_exists? instance["type"])
@@ -36,5 +42,6 @@ class Level
 		end
 		return instances
 	end
+
 end
 
