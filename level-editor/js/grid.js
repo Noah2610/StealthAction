@@ -67,6 +67,7 @@ function handle_click(event, highlight) {
 		block.css("top", highlight.css("top"));
 		block.css("width", highlight.css("width"));
 		block.css("height", highlight.css("height"));
+		block.css("background-color", highlight.css("background-color"));
 		block.data("instance", current_block());
 		block.data("test", "testval");
 

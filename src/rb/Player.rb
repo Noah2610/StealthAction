@@ -13,49 +13,86 @@ class Player
 		@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
 		@step_sneak = $settings.player(:step_sneak)
 
+		@last_door = nil
+
 		@step = args[:step] || $settings.player(:step)
 	end
 
-	def collision? dir, x = @x, y = @y, w = @w, h = @h
-		$game.room.solid_instances.each do |instance|
-			case dir
-			when :up
-				if (  ((y) <= instance.pos(:bottom))       &&
-							((y) > instance.pos(:top))           &&
-						((((x) < instance.pos(:right))         &&
-							((x) >= instance.pos(:left))        ) ||
-						 (((x + w) <= instance.pos(:right))     &&
-							((x + w) > instance.pos(:left))    ) ))
-					return true
-				end
-			when :down
-				if (  ((y + h) < instance.pos(:bottom))    &&
-							((y + h) >= instance.pos(:top))      &&
-						((((x) < instance.pos(:right))         &&
-							((x) >= instance.pos(:left))        ) ||
-						 (((x + w) <= instance.pos(:right))     &&
-							((x + w) > instance.pos(:left))    ) ))
-					return true
-				end
-			when :left
-				if (  ((x) <= instance.pos(:right))        &&
-							((x) > instance.pos(:left))          &&
-						((((y) < instance.pos(:bottom))        &&
-							((y) >= instance.pos(:top))         ) ||
-						 (((y + h) <= instance.pos(:bottom))    &&
-							((y + h) > instance.pos(:top))     ) ))
-					return true
-				end
-			when :right
-				if (  ((x + w) < instance.pos(:right))     &&
-							((x + w) >= instance.pos(:left))     &&
-						((((y) < instance.pos(:bottom))        &&
-							((y) >= instance.pos(:top))         ) ||
-						 (((y + h) <= instance.pos(:bottom))    &&
-							((y + h) > instance.pos(:top))     ) ))
-					return true
+	def collision? dir = nil, x = @x, y = @y, w = @w, h = @h, target: :solid
+		case target
+		## Default wall collision checking, solid instances
+		when :solid
+			$game.room.solid_instances.each do |instance|
+				case dir
+				when :up
+					if (  ((y) <= instance.pos(:bottom))       &&
+								((y) > instance.pos(:top))           &&
+							((((x) < instance.pos(:right))         &&
+								((x) >= instance.pos(:left))       ) ||
+							 (((x + w) <= instance.pos(:right))    &&
+								((x + w) > instance.pos(:left))    ) ))
+						return instance
+					end
+				when :down
+					if (  ((y + h) < instance.pos(:bottom))    &&
+								((y + h) >= instance.pos(:top))      &&
+							((((x) < instance.pos(:right))         &&
+								((x) >= instance.pos(:left))       ) ||
+							 (((x + w) <= instance.pos(:right))    &&
+								((x + w) > instance.pos(:left))    ) ))
+						return instance
+					end
+				when :left
+					if (  ((x) <= instance.pos(:right))        &&
+								((x) > instance.pos(:left))          &&
+							((((y) < instance.pos(:bottom))        &&
+								((y) >= instance.pos(:top))        ) ||
+							 (((y + h) <= instance.pos(:bottom))   &&
+								((y + h) > instance.pos(:top))     ) ))
+						return instance
+					end
+				when :right
+					if (  ((x + w) < instance.pos(:right))     &&
+								((x + w) >= instance.pos(:left))     &&
+							((((y) < instance.pos(:bottom))        &&
+								((y) >= instance.pos(:top))        ) ||
+							 (((y + h) <= instance.pos(:bottom))   &&
+								((y + h) > instance.pos(:top))     ) ))
+						return instance
+					end
 				end
 			end
+
+		## Check passable, non-solid instances only
+		when :passable, :not_solid
+			$game.room.passable_instances.each do |instance|
+				if (((((y) <= instance.pos(:bottom))       &&
+							((y) > instance.pos(:top))         ) ||
+						 (((y + h) < instance.pos(:bottom))    &&
+						  ((y + h) >= instance.pos(:top))   )) &&
+						((((x) < instance.pos(:right))         &&
+							((x) >= instance.pos(:left))       ) ||
+						 (((x + w) <= instance.pos(:right))    &&
+							((x + w) > instance.pos(:left))    ) ))
+					return instance
+				end
+			end
+
+		## Check doors
+		when :door, :doors
+			$game.room.get_instances(:doors).each do |instance|
+				if (((((y) <= instance.pos(:bottom))       &&
+							((y) > instance.pos(:top))         ) ||
+						 (((y + h) < instance.pos(:bottom))    &&
+						  ((y + h) >= instance.pos(:top))   )) &&
+						((((x) < instance.pos(:right))         &&
+							((x) >= instance.pos(:left))       ) ||
+						 (((x + w) <= instance.pos(:right))    &&
+							((x + w) > instance.pos(:left))    ) ))
+					return instance
+				end
+			end
+
 		end
 
 		return false
@@ -65,6 +102,17 @@ class Player
 		return  if dirs.empty?
 
 		step *= @step_sneak  if (sneak)
+
+		## Check if player collides with any door
+
+		coll_door = collision? target: :doors
+		if (!@last_door.nil? && @last_door != coll_door)
+			@last_door.is_not_inside!
+		end
+		if (coll_door)
+			@last_door = coll_door  unless (@last_door == coll_door)
+			@last_door.is_inside!
+		end
 
 		step.round.times do |s|
 			dirs.each do |dir|

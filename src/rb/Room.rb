@@ -17,9 +17,30 @@ class Room
 		init args  if (defined? init)
 	end
 
+	def get_instances target
+		case target
+		when :solid
+			return solid_instances
+		when :passable
+			return passable_instances
+		when :doors
+			return @instances.map do |instance|
+				next instance  if (instance.is_a? DoorInst)
+			end .reject { |v| v.nil? }
+		else
+			return nil
+		end
+	end
+
 	def solid_instances
 		return @instances.map do |instance|
 			next instance  if (instance.is_solid?)
+		end .reject { |v| v.nil? }
+	end
+
+	def passable_instances
+		return @instances.map do |instance|
+			next instance  if (instance.is_passable?)
 		end .reject { |v| v.nil? }
 	end
 

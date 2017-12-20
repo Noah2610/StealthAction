@@ -25,6 +25,9 @@ class Instance
 	def is_solid?
 		return @solid
 	end
+	def is_passable?
+		return !@solid
+	end
 
 	def pos axis
 		case axis

@@ -3,14 +3,16 @@ z-indices:
 	game_bg:        0
 	room_bg:        10
 	instance_bg:    20
+	door_instance:  25
 	player:         30
 
 TODO:
 	- enemies, items, floors, ...
 	- movement velocity
+	- FIX collision with instances smaller than player
 Level-Editor:
 	- loading levels
-	- web server
+	(- web server
 		- save level on server
-		- prompt user for download
+		- prompt user for download )
 

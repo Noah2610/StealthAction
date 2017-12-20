@@ -38,12 +38,13 @@ br {
 
 #grid__block__highlight {
 	position: absolute;
-	background-color: #cccccc;
+	/* background-color: #cccccc; */
+	opacity: 0.75;
 }
 
 .block {
 	position: absolute;
-	background-color: #999999;
+	/* background-color: #999999; */
 }
 
 
@@ -59,6 +60,16 @@ br {
 .panel__group {
 	padding-bottom: 16px;
 }
+
+#panel__block_selector__select {
+	background-color: #ffffff;
+	font-weight: bold;
+}
+
+.panel__block_selector__select__option {
+	font-weight: bold;
+}
+
 
 /* Textarea with calculated level-data json */
 #level_data {

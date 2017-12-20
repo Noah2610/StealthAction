@@ -1,6 +1,6 @@
 
 class Game < Gosu::Window
-	attr_reader :room
+	attr_reader :room, :player
 
 	def initialize
 		@x = @y = 0

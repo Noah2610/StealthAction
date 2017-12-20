@@ -66,15 +66,36 @@ function update_panel(panel) {
 }
 
 function populate_block_selector() {
-	const block_selector = $('#panel__block_selector select');
-	$.getJSON('./instances.json', function (json) {
-		const option = '<option value="REPLACEVALUE">REPLACENAME</option>';
-		json.forEach(function (name) {
-			block_selector.append(
-				option.replace("REPLACEVALUE", name)
-				      .replace("REPLACENAME", name)
-			);
+	const block_selector = $('#panel__block_selector__select');
+	$.getJSON('./instance_list.json', function (json) {
+		json.forEach(function (instance) {
+			const name = instance.name;
+			const color = instance.color;
+			const option = $(document.createElement("option"));
+				option.addClass("panel__block_selector__select__option");
+				option.val(name);
+				option.text(name);
+				option.css("color", color);
+			block_selector.append(option);
+
+			block_selector_update_color({ target: block_selector.get(0) }, json);
+
+			// EventListener for color changing when selecting option
+			block_selector.get(0).addEventListener("change", function (event) {
+				block_selector_update_color(event, json);
+			});
 		});
+	});
+}
+
+function block_selector_update_color(event, json) {
+	const select = $(event.target);
+	json.forEach(function (instance) {
+		if (instance.name == select.val()) {
+			select.css("color", instance.color);
+			$('#grid__block__highlight').css("background-color", instance.color);
+			return;
+		}
 	});
 }
 
