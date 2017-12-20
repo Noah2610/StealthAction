@@ -73,6 +73,31 @@ function handle_click(event, highlight) {
 	block_wrapper.append(block);
 }
 
+function handle_rightclick(event) {
+	const x = event.pageX;
+	const y = event.pageY;
+	const box_x = x - (x % settings.box_size.w);
+	const box_y = y - (y % settings.box_size.h);
+
+	var block = false;
+	const blocks = $('.block');
+	blocks.each(function () {
+		const b = $(this);
+		const left = parseInt(b.css("left"));
+		const right = parseInt(b.css("left")) + parseInt(b.css("width"));
+		const up = parseInt(b.css("top"));
+		const down = parseInt(b.css("top")) + parseInt(b.css("height"));
+		if ( (x >= left && x < right) &&
+		     (y >= up && y < down) ) {
+			block = b;
+			return;
+		}
+	});
+
+	if (block)
+		block.remove();
+}
+
 $(document).ready(function () {
 
 	const grid_wrapper = $('#grid_wrapper');
@@ -84,7 +109,15 @@ $(document).ready(function () {
 		handle_mousemove(event, highlight);
 	});
 
+	// Place block - left click
 	grid_wrapper.get(0).addEventListener("click", function (event) {
 		handle_click(event, highlight);
 	});
+
+	// Remove block - right click
+	grid_wrapper.get(0).addEventListener("contextmenu", function (event) {
+		event.preventDefault();
+		handle_rightclick(event);
+	});
+
 });
