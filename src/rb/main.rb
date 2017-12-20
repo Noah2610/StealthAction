@@ -15,14 +15,34 @@ class Game < Gosu::Window
 
 	### Initialize all game objects, after $game has been set
 	def init
+		## Preload all levels
+		@levels = load_levels DIR[:levels]
+
+=begin
 		@room = TestRm.new(
 			x: -100,
 			y: -100,
 			w: 500,
 			h: 500
 		)
+=end
+
+		@room = @levels[:test3].rooms.first  unless (@levels[:first].nil?)
 
 		@player = Player.new
+	end
+
+	def load_levels dir = DIR[:levels]
+		return nil  unless (Dir.exists? dir)
+		levels = {}
+		Dir.new(dir).each do |file|
+			next  if (file =~ /\A\.{1,2}\z/)
+			if (file =~ /\A\S+\.json\z/)
+				content = JSON.parse(File.read(File.join(dir, file)))
+				levels[file.sub(/\.json\Z/,"").to_sym] = Level.new(data: content)
+			end
+		end
+		return levels
 	end
 
 	def button_down id
@@ -46,7 +66,7 @@ class Game < Gosu::Window
 		#@player.update           if ($update_counter % 4 == 0)
 
 		# Update room
-		@room.update             if ($update_counter % 4 == 0)
+		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)
 
 		$update_counter += 1
 	end
@@ -59,7 +79,7 @@ class Game < Gosu::Window
 		@player.draw
 
 		# Draw room
-		@room.draw
+		@room.draw  unless (@room.nil?)
 	end
 end
 

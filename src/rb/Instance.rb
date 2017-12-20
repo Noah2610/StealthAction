@@ -2,7 +2,7 @@
 class Instance
 	def initialize args = {}
 		# Arguments
-		@room = args[:room]
+		@room = args[:room] || nil
 		@x = args[:x] || 0    # relative to room
 		@y = args[:y] || 0    # relative to room
 		@w = args[:w] || 16
@@ -16,6 +16,10 @@ class Instance
 		@solid = false
 
 		init args  if (defined? init)
+	end
+
+	def set_room room
+		@room = room
 	end
 
 	def is_solid?
@@ -47,7 +51,6 @@ class Instance
 	end
 
 	def update
-
 		# Custom update function of child class
 		update_custom  if (defined? update_custom)
 	end

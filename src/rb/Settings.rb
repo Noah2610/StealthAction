@@ -39,6 +39,7 @@ class Settings
 			}
 		}
 
+		## Load levels from json files into resources
 		@resources = {
 			colors: {
 				black:        Gosu::Color.argb(0xff_000000),

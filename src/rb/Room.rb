@@ -5,12 +5,14 @@ class Room
 	def initialize args = {}
 		@x = args[:x] || 0
 		@y = args[:y] || 0
-		@w = args[:w] || 100
-		@h = args[:h] || 100
+		@w = args[:w] || $settings.screen(:w)
+		@h = args[:h] || $settings.screen(:h)
+		@instances = args[:instances] || []
+
+		@instances.each { |inst| inst.set_room self }
 
 		@z = 10
 		@bg = $settings.rooms :bg
-		@instances = []
 
 		init args  if (defined? init)
 	end

@@ -1,7 +1,7 @@
 
 class PassableInst < Instance
 	def init args = {}
-		@solid = false
+		@solid = true
 	end
 end
 

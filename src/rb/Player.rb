@@ -20,8 +20,8 @@ class Player
 				if (  ((y) <= instance.pos(:bottom))       &&
 							((y) > instance.pos(:top))           &&
 						((((x) < instance.pos(:right))         &&
-							((x) > instance.pos(:left))        ) ||
-						 (((x + w) < instance.pos(:right))     &&
+							((x) >= instance.pos(:left))        ) ||
+						 (((x + w) <= instance.pos(:right))     &&
 							((x + w) > instance.pos(:left))    ) ))
 					return true
 				end
@@ -29,8 +29,8 @@ class Player
 				if (  ((y + h) < instance.pos(:bottom))    &&
 							((y + h) >= instance.pos(:top))      &&
 						((((x) < instance.pos(:right))         &&
-							((x) > instance.pos(:left))        ) ||
-						 (((x + w) < instance.pos(:right))     &&
+							((x) >= instance.pos(:left))        ) ||
+						 (((x + w) <= instance.pos(:right))     &&
 							((x + w) > instance.pos(:left))    ) ))
 					return true
 				end
@@ -38,8 +38,8 @@ class Player
 				if (  ((x) <= instance.pos(:right))        &&
 							((x) > instance.pos(:left))          &&
 						((((y) < instance.pos(:bottom))        &&
-							((y) > instance.pos(:top))         ) ||
-						 (((y + h) < instance.pos(:bottom))    &&
+							((y) >= instance.pos(:top))         ) ||
+						 (((y + h) <= instance.pos(:bottom))    &&
 							((y + h) > instance.pos(:top))     ) ))
 					return true
 				end
@@ -47,8 +47,8 @@ class Player
 				if (  ((x + w) < instance.pos(:right))     &&
 							((x + w) >= instance.pos(:left))     &&
 						((((y) < instance.pos(:bottom))        &&
-							((y) > instance.pos(:top))         ) ||
-						 (((y + h) < instance.pos(:bottom))    &&
+							((y) >= instance.pos(:top))         ) ||
+						 (((y + h) <= instance.pos(:bottom))    &&
 							((y + h) > instance.pos(:top))     ) ))
 					return true
 				end
