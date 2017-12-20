@@ -45,7 +45,21 @@ function handle_mousemove(event, highlight) {
 }
 
 function handle_click(event, highlight) {
+	const box_left = highlight.css("left");
+	const box_top = highlight.css("top");
+
 	const block_wrapper = $('#blocks');
+
+	var block_exists = false;
+	block_wrapper.children('.block').each(function () {
+		if ($(this).css("left") == box_left && $(this).css("top") == box_top) {
+			block_exists = true;
+			return;
+		}
+	});
+
+	if (block_exists)
+		return;
 
 	var block = $(document.createElement('span'));
 		block.addClass("grid__box block");
