@@ -10,6 +10,7 @@ class Game < Gosu::Window
 		@z = 0
 
 		@level_name = (ARGV[0] || :dev).to_sym
+		@room_name = (ARGV[1] || :sample).to_sym
 
 		super @w, @h
 		self.caption = "Stealth Action Game"
@@ -24,7 +25,7 @@ class Game < Gosu::Window
 		@level = load_level @level_name
 
 		#@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
-		@room = @level.get_room(:sample)
+		@room = @level.get_room(@room_name)
 
 		## Add player
 		#@player = Player.new x: 1700, y: 1250

@@ -16,7 +16,9 @@ const default_settings = {
 	},
 	block_offset: {
 		x: 0, y: 0
-	}
+	},
+
+	colors: {}
 };
 
 var settings = default_settings;

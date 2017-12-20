@@ -71,6 +71,7 @@ function populate_block_selector() {
 		json.forEach(function (instance) {
 			const name = instance.name;
 			const color = instance.color;
+			settings.colors[name] = color;
 			const option = $(document.createElement("option"));
 				option.addClass("panel__block_selector__select__option");
 				option.val(name);
@@ -99,12 +100,52 @@ function block_selector_update_color(event, json) {
 	});
 }
 
+function load_level(data) {
+	const json = JSON.parse(data);
+	const block_wrapper = $('#blocks')
+		block_wrapper.empty();
+
+	// Generate DOMs
+	json.instances.forEach(function (instance) {
+		const x = instance.x + "px";
+		const y = instance.y + "px";
+		const w = instance.w + "px";
+		const h = instance.h + "px";
+		const type = instance.type;
+		const color = settings.colors[instance.type];
+
+		const block = $(document.createElement("span"));
+			block.addClass("grid__box block");
+			block.css("left", x);
+			block.css("top", y);
+			block.css("width", w);
+			block.css("height", h);
+			block.css("background-color", color);
+			block.data("instance", type);
+
+		block_wrapper.append(block);
+	});
+}
+
+function load_level_file(event) {
+	const file = event.target.files[0];
+	const freader = new FileReader();
+	freader.onload = function (event) {
+		const data = event.target.result;
+		load_level(data);
+	}
+	console.log(freader.readAsText(file));
+}
+
 $(document).ready(function () {
 
 	const panel = $('#panel')
 	init_panel(panel);
 
 	populate_block_selector();
+
+	// Level uploading
+	$('#load_level').get(0).addEventListener("change", load_level_file);
 
 });
 
