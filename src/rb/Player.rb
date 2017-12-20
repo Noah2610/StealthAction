@@ -18,81 +18,185 @@ class Player
 		@step = args[:step] || $settings.player(:step)
 	end
 
-	def collision? dir = nil, x = @x, y = @y, w = @w, h = @h, target: :solid
+	def set_inst instance
+		return {
+			x:  instance.pos(:x),
+			x2: instance.pos(:x2),
+			y:  instance.pos(:y),
+			y2: instance.pos(:y2)
+		}
+	end
+
+	def check_smaller instance
+		return {
+			w: (@w.to_f / instance.w.to_f).ceil,
+			h: (@h.to_f / instance.h.to_f).ceil
+		}
+	end
+
+	def collision? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, target: :solid
 		case target
 		## Default wall collision checking, solid instances
 		when :solid
+			collision = false
 			$game.room.solid_instances.each do |instance|
+				## Check inside player if instance is smaller
+
+				inst = set_inst instance
+				smaller = check_smaller instance
+
+
 				case dir
 				when :up
-					if (  ((y) <= instance.pos(:bottom))       &&
-								((y) > instance.pos(:top))           &&
-							((((x) < instance.pos(:right))         &&
-								((x) >= instance.pos(:left))       ) ||
-							 (((x + w) <= instance.pos(:right))    &&
-								((x + w) > instance.pos(:left))    ) ))
-						return instance
+					if (smaller[:w] > 1)
+						if (@x < inst[:x] && (@x + @w) > inst[:x2])
+							inst[:x] -= @w
+							inst[:x2] += @w
+						end
+					end
+
+					if (  ((y) <= inst[:y2])        &&
+								((y) > inst[:y])          &&
+							((((x) < inst[:x2])         &&
+								((x) >= inst[:x])       ) ||
+							 (((x + w) <= inst[:x2])    &&
+								((x + w) > inst[:x])    ) ))
+						collision = instance
+						break
 					end
 				when :down
-					if (  ((y + h) < instance.pos(:bottom))    &&
-								((y + h) >= instance.pos(:top))      &&
-							((((x) < instance.pos(:right))         &&
-								((x) >= instance.pos(:left))       ) ||
-							 (((x + w) <= instance.pos(:right))    &&
-								((x + w) > instance.pos(:left))    ) ))
-						return instance
+					if (smaller[:w] > 1)
+						if (@x < inst[:x] && (@x + @w) > inst[:x2])
+							inst[:x] -= @w
+							inst[:x2] += @w
+						end
+					end
+
+					if (  ((y + h) < inst[:y2])     &&
+								((y + h) >= inst[:y])     &&
+							((((x) < inst[:x2])         &&
+								((x) >= inst[:x])       ) ||
+							 (((x + w) <= inst[:x2])    &&
+								((x + w) > inst[:x])    ) ))
+						collision = instance
+						break
 					end
 				when :left
-					if (  ((x) <= instance.pos(:right))        &&
-								((x) > instance.pos(:left))          &&
-							((((y) < instance.pos(:bottom))        &&
-								((y) >= instance.pos(:top))        ) ||
-							 (((y + h) <= instance.pos(:bottom))   &&
-								((y + h) > instance.pos(:top))     ) ))
-						return instance
+					if (smaller[:h] > 1)
+						if (@y < inst[:y] && (@y + @h) > inst[:y2])
+							inst[:y] -= @h
+							inst[:y2] += @h
+						end
+					end
+
+					if (  ((x) <= inst[:x2])        &&
+								((x) > inst[:x])          &&
+							((((y) < inst[:y2])         &&
+								((y) >= inst[:y])       ) ||
+							 (((y + h) <= inst[:y2])    &&
+								((y + h) > inst[:y])    ) ))
+						collision = instance
+						break
 					end
 				when :right
-					if (  ((x + w) < instance.pos(:right))     &&
-								((x + w) >= instance.pos(:left))     &&
-							((((y) < instance.pos(:bottom))        &&
-								((y) >= instance.pos(:top))        ) ||
-							 (((y + h) <= instance.pos(:bottom))   &&
-								((y + h) > instance.pos(:top))     ) ))
-						return instance
+					if (smaller[:h] > 1)
+						if (@y < inst[:y] && (@y + @h) > inst[:y2])
+							inst[:y] -= @h
+							inst[:y2] += @h
+						end
+					end
+
+					if (  ((x + w) < inst[:x2])     &&
+								((x + w) >= inst[:x])     &&
+							((((y) < inst[:y2])         &&
+								((y) >= inst[:y])       ) ||
+							 (((y + h) <= inst[:y2])    &&
+								((y + h) > inst[:y])    ) ))
+						collision = instance
+						break
 					end
 				end
 			end
+
+			collision.yes_collision  if (collision)
+			return collision
 
 		## Check passable, non-solid instances only
 		when :passable, :not_solid
+			collisions = []
 			$game.room.passable_instances.each do |instance|
-				if (((((y) <= instance.pos(:bottom))       &&
-							((y) > instance.pos(:top))         ) ||
-						 (((y + h) < instance.pos(:bottom))    &&
-						  ((y + h) >= instance.pos(:top))   )) &&
-						((((x) < instance.pos(:right))         &&
-							((x) >= instance.pos(:left))       ) ||
-						 (((x + w) <= instance.pos(:right))    &&
-							((x + w) > instance.pos(:left))    ) ))
-					return instance
+
+				inst = set_inst instance
+				smaller = check_smaller instance
+
+				if (smaller[:w] > 1)
+					if (@x < inst[:x] && (@x + @w) > inst[:x2])
+						inst[:x] -= @w
+						inst[:x2] += @w
+					end
+				end
+				if (smaller[:h] > 1)
+					if (@y < inst[:y] && (@y + @h) > inst[:y2])
+						inst[:y] -= @h
+						inst[:y2] += @h
+					end
+				end
+
+				if (((((y) <= inst[:y2])         &&
+							((y) >= inst[:y])        ) ||
+						 (((y + h) <= inst[:y2])     &&
+						  ((y + h) >= inst[:y])   )) &&
+						((((x) <= inst[:x2])         &&
+							((x) >= inst[:x])        ) ||
+						 (((x + w) <= inst[:x2])     &&
+							((x + w) >= inst[:x])   ))  )
+					collisions << instance
+				else
+					instance.no_collision
 				end
 			end
 
-		## Check doors
+			collisions.each &:yes_collision
+			return collisions
+
+		## Check doors - TODO deprecated, using passable collision checking for doors ^
 		when :door, :doors
+			collisions = []
 			$game.room.get_instances(:doors).each do |instance|
-				if (((((y) <= instance.pos(:bottom))       &&
-							((y) > instance.pos(:top))         ) ||
-						 (((y + h) < instance.pos(:bottom))    &&
-						  ((y + h) >= instance.pos(:top))   )) &&
-						((((x) < instance.pos(:right))         &&
-							((x) >= instance.pos(:left))       ) ||
-						 (((x + w) <= instance.pos(:right))    &&
-							((x + w) > instance.pos(:left))    ) ))
-					return instance
+
+				inst = set_inst instance
+				smaller = check_smaller instance
+
+				if (smaller[:w] > 1)
+					if (@x < inst[:x] && (@x + @w) > inst[:x2])
+						inst[:x] -= @w
+						inst[:x2] += @w
+					end
 				end
+				if (smaller[:h] > 1)
+					if (@y < inst[:y] && (@y + @h) > inst[:y2])
+						inst[:y] -= @h
+						inst[:y2] += @h
+					end
+				end
+
+				if (((((y) <= inst[:y2])         &&
+							((y) >= inst[:y])        ) ||
+						 (((y + h) <= inst[:y2])     &&
+						  ((y + h) >= inst[:y])   )) &&
+						((((x) <= inst[:x2])         &&
+							((x) >= inst[:x])        ) ||
+						 (((x + w) <= inst[:x2])     &&
+							((x + w) >= inst[:x])   ))  )
+					instance.is_inside!
+					collisions << instance
+				else
+					instance.is_outside!
+				end
+
 			end
 
+			return collisions
 		end
 
 		return false
@@ -105,14 +209,14 @@ class Player
 
 		## Check if player collides with any door
 
-		coll_door = collision? target: :doors
-		if (!@last_door.nil? && @last_door != coll_door)
-			@last_door.is_not_inside!
-		end
-		if (coll_door)
-			@last_door = coll_door  unless (@last_door == coll_door)
-			@last_door.is_inside!
-		end
+		collision? target: :passable
+#		if (!@last_door.nil? && @last_door != coll_door)
+#			@last_door.is_not_inside!
+#		end
+#		if (coll_door)
+#			@last_door = coll_door  unless (@last_door == coll_door)
+#			@last_door.is_inside!
+#		end
 
 		step.round.times do |s|
 			dirs.each do |dir|
@@ -142,14 +246,14 @@ class Player
 												 dir,
 												 @x + n, @y,
 												 @w, @h) )
-									@x = @x + n
+									@x += n
 									$camera.move :right, n
 									break
 								elsif ( !collision?(
 												 dir,
 												 @x - n, @y,
 												 @w, @h) )
-									@x = @x - n
+									@x -= n
 									$camera.move :left, n
 									break
 								end
@@ -159,14 +263,14 @@ class Player
 												 dir,
 												 @x, @y + n,
 												 @w, @h) )
-									@y = @y + n
+									@y += n
 									$camera.move :down, n
 									break
 								elsif ( !collision?(
 												 dir,
 												 @x, @y - n,
 												 @w, @h) )
-									@y = @y - n
+									@y -= n
 									$camera.move :up, n
 									break
 								end
@@ -197,6 +301,7 @@ class Player
 	end
 
 	def update
+		#collision? target: :doors
 	end
 
 	def draw

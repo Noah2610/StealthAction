@@ -10,6 +10,7 @@ TODO:
 	- enemies, items, floors, ...
 	- movement velocity
 	- FIX collision with instances smaller than player
+	- Glitchiness with player collision_padding
 Level-Editor:
 	- loading levels
 	(- web server

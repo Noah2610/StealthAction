@@ -33,7 +33,7 @@ class Settings
 				},
 				step: 6,
 				step_sneak: 0.4,    # times regular step
-				collision_padding: 8
+				collision_padding: 12
 			},
 
 			rooms: {

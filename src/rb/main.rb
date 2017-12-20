@@ -9,7 +9,7 @@ class Game < Gosu::Window
 		@h = screen[:h]
 		@z = 0
 
-		@level_name = (ARGV[0] || :first).to_sym
+		@level_name = (ARGV[0] || :dev).to_sym
 
 		super @w, @h
 		self.caption = "Stealth Action Game"
@@ -83,7 +83,7 @@ class Game < Gosu::Window
 		@player.move dirs, sneak, 6  unless (dirs.empty?)
 
 		# Update player
-		#@player.update           if ($update_counter % 4 == 0)
+		@player.update           if ($update_counter % 4 == 0)
 
 		# Update room
 		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)

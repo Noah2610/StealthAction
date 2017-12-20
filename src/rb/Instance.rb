@@ -1,5 +1,7 @@
 
 class Instance
+	attr_reader :w,:h
+
 	def initialize args = {}
 		# Arguments
 		@room = args[:room] || nil
@@ -51,6 +53,11 @@ class Instance
 		else
 			return 0
 		end
+	end
+
+	def yes_collision
+	end
+	def no_collision
 	end
 
 	def update

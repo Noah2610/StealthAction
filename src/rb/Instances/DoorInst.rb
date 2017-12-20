@@ -5,15 +5,15 @@ class DoorInst < Instance
 		@bg_outside = $settings.colors :red
 		@bg_inside = $settings.colors :brown
 		@bg = @bg_outside
-		@z = 25
+		#@z = 25
+		@z = 35
 	end
 
-	def is_inside!
-		@bg = @bg_inside
+	def yes_collision
+		@bg = @bg_inside   unless (@bg == @bg_inside)
 	end
-
-	def is_not_inside!
-		@bg = @bg_outside
+	def no_collision
+		@bg = @bg_outside  unless (@bg == @bg_outside)
 	end
 end
 
