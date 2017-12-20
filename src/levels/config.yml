@@ -1,0 +1,8 @@
+---
+### Default Level config.yml
+room_order:
+  - room_one
+  - room_two
+  - room_three
+difficulty: 0
+...
