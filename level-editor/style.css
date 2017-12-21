@@ -60,6 +60,7 @@ br {
 	border: 2px solid black;
 	padding: 8px;
 	overflow-y: scroll;
+	height: 95%;
 }
 
 #panel__settings {
@@ -101,5 +102,6 @@ br {
 #level_data {
 	display: block;
 	width: 100%;
+	margin-bottom: 16px;
 }
 
