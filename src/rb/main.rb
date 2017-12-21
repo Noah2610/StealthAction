@@ -101,22 +101,32 @@ class Game < Gosu::Window
 			$camera.move k         if (v.map { |id| Gosu.button_down? id } .any?)
 		end                      #if ($update_counter % 4 == 0)
 		## Player movement
-		dirs = []
-		$settings.controls(:player)[:movement].each do |k,v|
-			dirs << k  if (v.map { |id| Gosu.button_down? id } .any?)
-		end                      if ($update_counter % 2 == 0)
-		@player.incr_vel dirs    if ($update_counter % $settings.player(:move_interval) == 0)  # Add velocity to player
-		## If player is sneaking
-		if ($settings.controls(:player)[:sneak].map { |sn| Gosu.button_down? sn } .any?)
-			@player.is_sneaking!
-		else
-			@player.is_not_sneaking!
+		if ($update_counter % $settings.player(:move_interval) == 0)
+			dirs = []
+			$settings.controls(:player)[:movement].each do |k,v|
+				dirs << k  if (v.map { |id| Gosu.button_down? id } .any?)
+			end
+			## Add velocity to player
+			@player.incr_vel dirs    #if ($update_counter % $settings.player(:move_interval) == 0)
+
+			## If player is sneaking
+			if ($settings.controls(:player)[:sneak].map { |sn| Gosu.button_down? sn } .any?)
+				@player.is_sneaking!
+			else
+				@player.is_not_sneaking!
+			end
+
+			## Slow down player if not accelerating
+			decr_axes = []
+			decr_axes << :x    unless (dirs.include?(:left) || dirs.include?(:right))
+			decr_axes << :y    unless (dirs.include?(:up) || dirs.include?(:down))
+			#decr_dirs = []
+			#decr_dirs << :up     unless (dirs.include?(:up))
+			#decr_dirs << :down   unless (dirs.include?(:down))
+			#decr_dirs << :left   unless (dirs.include?(:left))
+			#decr_dirs << :right  unless (dirs.include?(:right))
+			@player.decr_vel decr_axes
 		end
-		## Slow down player if not accelerating
-		decr_axes = []
-		decr_axes << :x    unless (dirs.include?(:left) || dirs.include?(:right))  if ($update_counter % $settings.player(:move_interval) == 0)
-		decr_axes << :y    unless (dirs.include?(:up) || dirs.include?(:down))     if ($update_counter % $settings.player(:move_interval) == 0)
-		@player.decr_vel decr_axes
 
 		#@player.move dirs, sneak, 6  unless (dirs.empty?)
 
@@ -125,6 +135,10 @@ class Game < Gosu::Window
 
 		# Update room
 		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)
+
+		if ($update_counter % 16 == 0)
+			puts @player.vel.to_s
+		end
 
 		$update_counter += 1
 	end

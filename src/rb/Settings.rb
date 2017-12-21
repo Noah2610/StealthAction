@@ -35,16 +35,16 @@ class Settings
 				step:              1,
 				step_sneak:        0.4,    # times velocity
 				max_vel: {
-					x: 16,
-					y: 16
+					x: 8,
+					y: 8
 				},
 				vel_incr: {
 					x: 1,
 					y: 1
 				},
 				vel_decr: {
-					x: 2,
-					y: 2
+					x: 4,
+					y: 4
 				},
 				move_interval:     4,
 				collision_padding: 12

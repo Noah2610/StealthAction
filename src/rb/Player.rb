@@ -351,24 +351,28 @@ class Player
 			case dir
 			when :up
 				if (@vel[:y] > -@max_vel[:y])
+					decr_vel [:y]  if (@vel[:y] > 0)
 					@vel[:y] -= @vel_incr[:y]
 				else
 					@vel[:y] = -@max_vel[:y]
 				end
 			when :down
 				if (@vel[:y] < @max_vel[:y])
+					decr_vel [:y]  if (@vel[:y] < 0)
 					@vel[:y] += @vel_incr[:y]
 				else
 					@vel[:y] = @max_vel[:y]
 				end
 			when :left
 				if (@vel[:x] > -@max_vel[:x])
+					decr_vel [:x]  if (@vel[:x] > 0)
 					@vel[:x] -= @vel_incr[:x]
 				else
 					@vel[:x] = -@max_vel[:x]
 				end
 			when :right
 				if (@vel[:x] < @max_vel[:x])
+					decr_vel [:x]  if (@vel[:x] < 0)
 					@vel[:x] += @vel_incr[:x]
 				else
 					@vel[:x] = @max_vel[:x]
