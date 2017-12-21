@@ -20,48 +20,62 @@
 
 
 		<div id="panel">
-			<h3>StealthAction - Level Editor</h3>
+			<input type="button" id="panel__toggle_panel" value="&gt;" title="Toggle panel"></input>
 
-			<input id="load_level" type="file">Load Level</input>
-
-			<div class="panel__group" id="panel__block_selector">
-				<strong>Block:</strong><br />
-				<select id="panel__block_selector__select">
-				</select>
+			<div id="panel__settings">
+				<h3>StealthAction - Room Editor</h3>
+				
+				<input id="load_level" type="file">Load Level</input>
+				
+				<div class="panel__group" id="panel__room_size">
+					<strong>Room size:</strong>
+					<div>
+						w: <input type="text" id="panel__room_size__w"></input>
+					</div>
+					<div>
+						h: <input type="text" id="panel__room_size__h"></input>
+					</div>
+				</div>
+				
+				<div class="panel__group" id="panel__block_selector">
+					<strong>Block:</strong><br />
+					<select id="panel__block_selector__select">
+					</select>
+				</div>
+				
+				<div class="panel__group" id="panel__grid_size">
+					<strong>Box size (grid cell):</strong><br />
+					<div>
+						w: <input type="text" id="panel__box_size__w"></input>
+					</div>
+					<div>
+						h: <input type="text" id="panel__box_size__h"></input>
+					</div>
+				</div>
+				
+				<div class="panel__group" id="panel__block_size">
+					<strong>Block size:</strong><br />
+					<div>
+						w: <input type="text" id="panel__block_size__w"></input>
+					</div>
+					<div>
+						h: <input type="text" id="panel__block_size__h"></input>
+					</div>
+				</div>
+				
+				<div class="panel__group" id="panel__block_offset">
+					<strong>Block offset:</strong><br />
+					<div>
+						x: <input type="text" id="panel__block_offset__x"></input>
+					</div>
+					<div>
+						y: <input type="text" id="panel__block_offset__y"></input>
+					</div>
+				</div>
+				
+				<input type="button" id="save_btn" value="Save Level" />
+				<input type="text" id="level_name" placeholder="Level Name" />
 			</div>
-
-			<div class="panel__group" id="panel__grid_size">
-				<strong>Box size (grid cell):</strong><br />
-				<div>
-					w: <input type="text" id="panel__box_size__w"></input>
-				</div>
-				<div>
-					h: <input type="text" id="panel__box_size__h"></input>
-				</div>
-			</div>
-
-			<div class="panel__group" id="panel__block_size">
-				<strong>Block size:</strong><br />
-				<div>
-					w: <input type="text" id="panel__block_size__w"></input>
-				</div>
-				<div>
-					h: <input type="text" id="panel__block_size__h"></input>
-				</div>
-			</div>
-
-			<div class="panel__group" id="panel__block_offset">
-				<strong>Block offset:</strong><br />
-				<div>
-					x: <input type="text" id="panel__block_offset__x"></input>
-				</div>
-				<div>
-					y: <input type="text" id="panel__block_offset__y"></input>
-				</div>
-			</div>
-
-			<input type="button" id="save_btn" value="Save Level" />
-			<input type="text" id="level_name" placeholder="Level Name" />
 		</div>
 
 		<script type="text/javascript" src="./js/main.js"></script>

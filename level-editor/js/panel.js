@@ -6,7 +6,9 @@ function init_panel(panel) {
 		panel.find('#panel__block_size__w'),
 		panel.find('#panel__block_size__h'),
 		panel.find('#panel__block_offset__x'),
-		panel.find('#panel__block_offset__y')
+		panel.find('#panel__block_offset__y'),
+		panel.find('#panel__room_size__w'),
+		panel.find('#panel__room_size__h')
 	].forEach(function (el) {
 		el.get(0).addEventListener("change", function (event) {
 			const input = $(event.target);
@@ -30,8 +32,14 @@ function init_panel(panel) {
 				case 'panel__block_offset__y':
 					settings.block_offset.y = parseInt(val);
 					break;
-				default:
+				case 'panel__room_size__w':
+					settings.room_size.w = parseInt(val);
+					break;
+				case 'panel__room_size__h':
+					settings.room_size.h = parseInt(val);
+					break;
 			}
+			console.log(settings.room_size);
 
 			update_panel(panel);
 			update_grid($('#grid'));
@@ -57,12 +65,19 @@ function update_panel(panel) {
 		y: panel.find('#panel__block_offset__y')
 	};
 
+	const room_size_el = {
+		w: panel.find('#panel__room_size__w'),
+		h: panel.find('#panel__room_size__h')
+	};
+
 	box_size_el.w.val(settings.box_size.w);
 	box_size_el.h.val(settings.box_size.h);
 	block_size_el.w.val(settings.block_size.w);
 	block_size_el.h.val(settings.block_size.h);
 	block_offset_el.x.val(settings.block_offset.x);
 	block_offset_el.y.val(settings.block_offset.y);
+	room_size_el.w.val(settings.room_size.w);
+	room_size_el.h.val(settings.room_size.h);
 }
 
 function populate_block_selector() {
@@ -137,6 +152,20 @@ function load_level_file(event) {
 	console.log(freader.readAsText(file));
 }
 
+function toggle_panel(event) {
+	const btn = $('#panel__toggle_panel');
+	const panel = $('#panel__settings');
+	if (panel.css("display") == "block") {
+		// Hide panel
+		panel.css("display", "none");
+		btn.val("<");
+	} else if (panel.css("display") == "none") {
+		// Show panel
+		panel.css("display", "block");
+		btn.val(">");
+	}
+}
+
 $(document).ready(function () {
 
 	const panel = $('#panel')
@@ -146,6 +175,9 @@ $(document).ready(function () {
 
 	// Level uploading
 	$('#load_level').get(0).addEventListener("change", load_level_file);
+
+	// Toggle panel
+	$('#panel__toggle_panel').get(0).addEventListener("click", toggle_panel);
 
 });
 

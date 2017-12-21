@@ -1,10 +1,6 @@
 
 const default_settings = {
 	screen: {
-		w: 2000, // 960
-		h: 1500  // 640
-	},
-	screen: {
 		w: parseInt($('#grid_wrapper').css("width")),
 		h: parseInt($('#grid_wrapper').css("height"))
 	},
@@ -16,6 +12,9 @@ const default_settings = {
 	},
 	block_offset: {
 		x: 0, y: 0
+	},
+	room_size: {
+		w: 960, h: 640
 	},
 
 	colors: {}

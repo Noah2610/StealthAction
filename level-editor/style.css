@@ -15,8 +15,6 @@ br {
 	display: inline-block;
 	margin: 0;
 	padding: 0;
-	width: 960px;
-	height: 640px;
 	font-size: 0;
 	-webkit-box-shadow: inset 0px 0px 0px 2px #000;
 	-moz-box-shadow: inset 0px 0px 0px 2px #000;
@@ -24,6 +22,10 @@ br {
 }
 
 #grid {
+	/*
+	width: 960px;
+	height: 640px;
+	*/
 }
 
 .grid__box {
@@ -49,12 +51,19 @@ br {
 
 
 #panel {
-	float: right;
+	position: fixed;
 	display: inline-block;
-	width: 400px;
-	/* height: 640px; */
+	right: 0;
+	top: 0;
+	background-color: #eeeeee;
 	border: 2px solid black;
 	padding: 8px;
+}
+
+#panel__settings {
+	display: block;
+	width: 360px;
+	/* height: 640px; */
 }
 
 .panel__group {
@@ -68,6 +77,21 @@ br {
 
 .panel__block_selector__select__option {
 	font-weight: bold;
+}
+
+#panel__toggle_panel {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	float: right;
+	width: 32px;
+	height: 32px;
+	border: 1px solid #203db0;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 16px;
+	color: #203db0;
+	background-color: #cccccc;
 }
 
 

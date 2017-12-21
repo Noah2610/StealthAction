@@ -8,14 +8,16 @@ function update_highlight(highlight) {
 
 function update_grid(grid) {
 	grid.empty();
+	grid.css("width", settings.room_size.w + "px");
+	grid.css("height", settings.room_size.h + "px");
 
 	const box_w = settings.box_size.w;
 	const box_h = settings.box_size.h;
 	const style = 'width: '+ box_w +'px; height: '+ box_h +'px;';
 	const box_el = '<span class="grid__box" style="'+ style +'" data-x="0" data-y="0"></span>';
 	
-	const boxes_x = Math.floor(settings.screen.w / box_w);
-	const boxes_y = Math.floor(settings.screen.h / box_h);
+	const boxes_x = Math.floor(settings.room_size.w / box_w);
+	const boxes_y = Math.floor(settings.room_size.h / box_h);
 
 	for (var row = 0; row < boxes_y; row++) {
 		for (var col = 0; col < boxes_x; col++) {
@@ -36,8 +38,8 @@ function handle_mousemove(event, highlight) {
 
 	//const box_el = $('#grid .grid__box[data-x="'+ box_x +'"][data-y="'+ box_y +'"]');
 	
-	if ((x >= 0 && x < settings.screen.w) &&
-		  (y >= 0 && y < settings.screen.h)) {
+	if ((x >= 0 && x < settings.room_size.w) &&
+		  (y >= 0 && y < settings.room_size.h)) {
 		highlight.data("x", box_x);
 		highlight.data("y", box_y);
 		update_highlight(highlight);

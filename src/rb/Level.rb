@@ -21,8 +21,10 @@ class Level
 		rooms = {}
 		rooms_json.each do |name, json|
 			rooms[name] = Room.new(
+				name:      name,
 				instances: gen_instances(json["instances"]),
-				name:      name
+				w:         json["w"],
+				w:         json["h"]
 			)
 		end
 		return rooms
