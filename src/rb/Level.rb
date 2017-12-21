@@ -20,11 +20,15 @@ class Level
 	def gen_rooms rooms_json
 		rooms = {}
 		rooms_json.each do |name, json|
+			unless (json["size"].nil?)
+				w = json["size"]["w"]
+				h = json["size"]["h"]
+			end
 			rooms[name] = Room.new(
 				name:      name,
 				instances: gen_instances(json["instances"]),
-				w:         json["w"],
-				w:         json["h"]
+				w:         w,
+				h:         h
 			)
 		end
 		return rooms

@@ -70,7 +70,11 @@ function save_level() {
 	});
 
 	const data = {
-		instances: blocks
+		instances: blocks,
+		size: {
+			w: settings.room_size.w,
+			h: settings.room_size.h
+		}
 	}
 	const data_string = JSON.stringify(data);
 	// Copy level data to clipboard
