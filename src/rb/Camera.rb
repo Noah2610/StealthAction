@@ -25,5 +25,11 @@ class Camera
 		@x = args[:x]  unless (args[:x].nil?)
 		@y = args[:y]  unless (args[:y].nil?)
 	end
+
+	def center_on args
+		x = args[:x] - ($settings.screen(:w) / 2)  unless (args[:x].nil?)
+		y = args[:y] - ($settings.screen(:h) / 2)  unless (args[:y].nil?)
+		move_to x: x, y: y
+	end
 end
 

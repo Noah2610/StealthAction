@@ -35,7 +35,7 @@ class Game < Gosu::Window
 		@player = Player.new spawn: @room.get_spawn
 
 		## Move camera to player
-		$camera.move_to x: (@player.x - ($settings.screen(:w) / 2)), y: (@player.y - ($settings.screen(:h) / 2))
+		$camera.center_on x: @player.x, y: @player.y
 	end
 
 	def load_level name = :sample, dir = DIR[:levels]
@@ -89,6 +89,7 @@ class Game < Gosu::Window
 			if ($settings.controls(:random_room).include? id)
 				@level = load_level :sample
 				@room = @level.get_room :sample
+				@player.move_to_spawn @room.get_spawn
 				puts "Level: #{@level.name}"
 				puts "  Room: #{@room.name}"
 			end

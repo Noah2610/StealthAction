@@ -460,6 +460,14 @@ class Player
 		return @sneaking
 	end
 
+	def move_to_spawn spawn
+		return if (spawn.nil?)
+		@x = spawn.pos :x
+		@y = spawn.pos :y
+		## Move camera to player
+		$camera.center_on x: @x, y: @y
+	end
+
 	def update
 		## Move player
 		move is_sneaking?

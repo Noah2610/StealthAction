@@ -114,7 +114,8 @@ $(document).ready(function () {
 
 	// Place block - left click
 	grid_wrapper.get(0).addEventListener("mousedown", function (event) {
-		handle_click(event, highlight);
+		if (event.buttons == 1)
+			handle_click(event, highlight);
 	});
 
 	// Remove block - right click
