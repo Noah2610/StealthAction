@@ -6,7 +6,7 @@ function update_highlight(highlight) {
 	highlight.css("top", highlight.data("y") + settings.block_offset.y);
 }
 
-function update_grid(grid) {
+function update_grid(grid = $('#grid')) {
 	grid.empty();
 	grid.css("width", settings.room_size.w + "px");
 	grid.css("height", settings.room_size.h + "px");

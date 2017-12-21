@@ -120,6 +120,13 @@ function load_level(data) {
 	const block_wrapper = $('#blocks')
 		block_wrapper.empty();
 
+	if (!!json.size) {
+		if (!!json.size.w)
+			settings.room_size.w = json.size.w;
+		if (!!json.size.h)
+			settings.room_size.h = json.size.h;
+	}
+
 	// Generate DOMs
 	json.instances.forEach(function (instance) {
 		const x = instance.x + "px";
@@ -140,6 +147,8 @@ function load_level(data) {
 
 		block_wrapper.append(block);
 	});
+
+	update_grid();
 }
 
 function load_level_file(event) {

@@ -11,6 +11,8 @@ br {
 	padding: 0;
 }
 
+
+/* Grid */
 #grid_wrapper {
 	display: inline-block;
 	margin: 0;
@@ -40,16 +42,15 @@ br {
 
 #grid__block__highlight {
 	position: absolute;
-	/* background-color: #cccccc; */
 	opacity: 0.75;
 }
 
 .block {
 	position: absolute;
-	/* background-color: #999999; */
 }
 
 
+/* Panel */
 #panel {
 	position: fixed;
 	display: inline-block;
@@ -58,6 +59,7 @@ br {
 	background-color: #eeeeee;
 	border: 2px solid black;
 	padding: 8px;
+	overflow-y: scroll;
 }
 
 #panel__settings {
