@@ -256,7 +256,7 @@ class Player
 							moved_in_tmp = true
 						end
 					end
-					@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
+					#@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
 				when :y
 					unless (coll)
 						@y += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:y]))
@@ -265,7 +265,64 @@ class Player
 							moved_in_tmp = true
 						end
 					end
-					@vel[:y] = @vel_incr[:y] * s.sign  if (coll)
+					#@vel[:y] = @vel_incr[:y] * s.sign  if (coll)
+				end
+
+				if (coll)
+					collision_padded = false
+					# Slide into hole - collision_padding
+					if (@vel.map { |k,v| v.abs > 0 } .count(true) == 1)
+						@collision_padding.times do |n|
+							case dir
+							when :up, :down
+								if    ( !collision?(
+												 dir,
+												 @x + n, @y,
+												 @w, @h) )
+									@x += n
+									$camera.move :right, n
+									collision_padded = true
+									break
+								elsif ( !collision?(
+												 dir,
+												 @x - n, @y,
+												 @w, @h) )
+									@x -= n
+									$camera.move :left, n
+									collision_padded = true
+									break
+								end
+
+							when :left, :right
+								if    ( !collision?(
+												 dir,
+												 @x, @y + n,
+												 @w, @h) )
+									@y += n
+									$camera.move :down, n
+									collision_padded = true
+									break
+								elsif ( !collision?(
+												 dir,
+												 @x, @y - n,
+												 @w, @h) )
+									@y -= n
+									$camera.move :up, n
+									collision_padded = true
+									break
+								end
+							end
+						end
+					end
+
+					unless (collision_padded)
+						case axis
+						when :x
+							@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
+						when :y
+							@vel[:y] = @vel_incr[:y] * s.sign  if (coll)
+						end
+					end
 				end
 
 				# Move camera with player

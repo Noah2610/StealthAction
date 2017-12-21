@@ -136,9 +136,11 @@ class Game < Gosu::Window
 		# Update room
 		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)
 
+=begin
 		if ($update_counter % 16 == 0)
 			puts @player.vel.to_s
 		end
+=end
 
 		$update_counter += 1
 	end

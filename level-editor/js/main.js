@@ -84,7 +84,7 @@ function save_level() {
 		data_el.attr("id", "level_data");
 		data_el.attr("rows", "20");
 		data_el.text(data_string);
-	$('#panel').append(data_el);
+	$('#panel__settings').append(data_el);
 
 	// Get level name
 	var name = $('#level_name').val();
