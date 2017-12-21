@@ -32,8 +32,21 @@ class Settings
 					w: 32,
 					h: 32
 				},
-				step: 6,
-				step_sneak: 0.4,    # times regular step
+				step:              1,
+				step_sneak:        0.4,    # times velocity
+				max_vel: {
+					x: 8,
+					y: 8
+				},
+				vel_incr: {
+					x: 2,
+					y: 2
+				},
+				vel_decr: {
+					x: 6,
+					y: 6
+				},
+				move_interval:     4,
 				collision_padding: 12
 			},
 

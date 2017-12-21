@@ -34,7 +34,7 @@ class Room
 	end
 
 	def get_spawn
-		return @instances.each do |instance|
+		@instances.each do |instance|
 			return instance  if (instance.is_a? SpawnInst)
 		end
 		return nil

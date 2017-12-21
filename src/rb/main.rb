@@ -96,20 +96,32 @@ class Game < Gosu::Window
 	end
 
 	def update
-		# Camera movement
+		## Camera movement
 		$settings.controls(:camera).each do |k,v|
 			$camera.move k         if (v.map { |id| Gosu.button_down? id } .any?)
 		end                      #if ($update_counter % 4 == 0)
-		# Player movement
+		## Player movement
 		dirs = []
 		$settings.controls(:player)[:movement].each do |k,v|
 			dirs << k  if (v.map { |id| Gosu.button_down? id } .any?)
 		end                      if ($update_counter % 2 == 0)
-		sneak = $settings.controls(:player)[:sneak].map { |sn| Gosu.button_down? sn } .any?
-		@player.move dirs, sneak, 6  unless (dirs.empty?)
+		@player.incr_vel dirs    if ($update_counter % $settings.player(:move_interval) == 0)  # Add velocity to player
+		## If player is sneaking
+		if ($settings.controls(:player)[:sneak].map { |sn| Gosu.button_down? sn } .any?)
+			@player.is_sneaking!
+		else
+			@player.is_not_sneaking!
+		end
+		## Slow down player if not accelerating
+		decr_axes = []
+		decr_axes << :x    unless (dirs.include?(:left) || dirs.include?(:right))  if ($update_counter % $settings.player(:move_interval) == 0)
+		decr_axes << :y    unless (dirs.include?(:up) || dirs.include?(:down))     if ($update_counter % $settings.player(:move_interval) == 0)
+		@player.decr_vel decr_axes
+
+		#@player.move dirs, sneak, 6  unless (dirs.empty?)
 
 		# Update player
-		@player.update           if ($update_counter % 4 == 0)
+		@player.update           #if ($update_counter % 4 == 0)
 
 		# Update room
 		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)

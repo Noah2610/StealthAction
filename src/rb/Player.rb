@@ -4,6 +4,7 @@ class Player
 
 	def initialize args = {}
 		if (args[:spawn])
+			puts args[:spawn]
 			@x = args[:spawn].pos(:x)
 			@y = args[:spawn].pos(:y)
 		else
@@ -18,9 +19,15 @@ class Player
 		@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
 		@step_sneak = $settings.player(:step_sneak)
 
-		@last_door = nil
-
 		@step = args[:step] || $settings.player(:step)
+		@sneaking = false
+
+		@vel = {
+			x: 0, y: 0
+		}
+		@max_vel = $settings.player(:max_vel)
+		@vel_incr = $settings.player(:vel_incr)
+		@vel_decr = $settings.player(:vel_decr)
 	end
 
 	def set_inst instance
@@ -49,7 +56,6 @@ class Player
 
 				inst = set_inst instance
 				smaller = check_smaller instance
-
 
 				case dir
 				when :up
@@ -207,22 +213,50 @@ class Player
 		return false
 	end
 
-	def move dirs, sneak = false, step = @step
-		return  if dirs.empty?
-
-		step *= @step_sneak  if (sneak)
+	#def move dirs, sneak = false, step = { x: vel[:x].abs, y: vel[:y].abs }
+	def move sneak = false, vel = { x: @vel[:x], y: @vel[:y] }
+		vel = vel.map do |axis,speed|
+			next [axis, speed * @step_sneak]
+		end .to_h  if (sneak)
+		#step *= @step_sneak  if (sneak)
 
 		## Check if player collides with any door
 
 		collision? target: :passable
-#		if (!@last_door.nil? && @last_door != coll_door)
-#			@last_door.is_not_inside!
-#		end
-#		if (coll_door)
-#			@last_door = coll_door  unless (@last_door == coll_door)
-#			@last_door.is_inside!
-#		end
 
+		vel.each do |axis,speed|
+			speed.abs.round.times do |s|
+				case axis
+				when :x
+					if    (speed < 0)
+						dir = :left
+					elsif (speed > 0)
+						dir = :right
+					end
+				when :y
+					if    (speed < 0)
+						dir = :up
+					elsif (speed > 0)
+						dir = :down
+					end
+				end
+
+				coll = collision? dir
+				case axis
+				when :x
+					@x += 1 * speed.sign  unless (coll)
+					@vel[:x] = 0          if (coll)
+				when :y
+					@y += 1 * speed.sign  unless (coll)
+					@vel[:y] = 0          if (coll)
+				end
+
+				# Move camera with player
+				$camera.move dir, 1     unless (coll)
+			end
+		end
+
+=begin
 		step.round.times do |s|
 			dirs.each do |dir|
 				unless (collision? dir)
@@ -286,12 +320,72 @@ class Player
 
 			end
 		end
+=end
 
 		# Camera sticks to player
 		#$camera.move_to(
 		#	x: ((@x + (@w / 2)) - ($settings.screen(:w) / 2)),
 		#	y: ((@y + (@h / 2)) - ($settings.screen(:h) / 2)),
 		#)
+	end
+
+	def incr_vel dirs
+		dirs.each do |dir|
+			case dir
+			when :up
+				if (@vel[:y] > -@max_vel[:y])
+					@vel[:y] -= @vel_incr[:y]
+				else
+					@vel[:y] = -@max_vel[:y]
+				end
+			when :down
+				if (@vel[:y] < @max_vel[:y])
+					@vel[:y] += @vel_incr[:y]
+				else
+					@vel[:y] = @max_vel[:y]
+				end
+			when :left
+				if (@vel[:x] > -@max_vel[:x])
+					@vel[:x] -= @vel_incr[:x]
+				else
+					@vel[:x] = -@max_vel[:x]
+				end
+			when :right
+				if (@vel[:x] < @max_vel[:x])
+					@vel[:x] += @vel_incr[:x]
+				else
+					@vel[:x] = @max_vel[:x]
+				end
+			end
+		end
+	end
+
+	def decr_vel axes
+		axes.each do |axis|
+			if    (@vel[axis] < 0)
+				@vel[axis] += @vel_decr[axis]
+				@vel[axis] = 0  if (@vel[axis] > 0)
+			elsif (@vel[axis] > 0)
+				@vel[axis] -= @vel_decr[axis]
+				@vel[axis] = 0  if (@vel[axis] < 0)
+			end
+		end
+	end
+
+	def is_sneaking!
+		@sneaking = true
+	end
+	def is_not_sneaking!
+		@sneaking = false
+	end
+
+	def is_sneaking?
+		return @sneaking
+	end
+
+	def update
+		## Move player
+		move is_sneaking?
 	end
 
 	def draw_pos axis
@@ -303,10 +397,6 @@ class Player
 		else
 			return 0
 		end
-	end
-
-	def update
-		#collision? target: :doors
 	end
 
 	def draw
