@@ -17,7 +17,8 @@ class Settings
 				down:  [Gosu::KB_J],
 				left:  [Gosu::KB_H],
 				right: [Gosu::KB_L]
-			}
+			},
+			random_room: [Gosu::KB_RETURN, Gosu::KB_TAB]
 		}
 
 		@settings = {

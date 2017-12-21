@@ -9,7 +9,7 @@ class Game < Gosu::Window
 		@h = screen[:h]
 		@z = 0
 
-		@level_name = (ARGV[0] || :dev).to_sym
+		@level_name = (ARGV[0] || :sample).to_sym
 		@room_name = (ARGV[1] || :sample).to_sym
 
 		super @w, @h
@@ -27,6 +27,9 @@ class Game < Gosu::Window
 		#@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
 		@room = @level.get_room(@room_name)
 
+		puts "Level: #{@level.name}"
+		puts "  Room: #{@room.name}"
+
 		## Add player
 		#@player = Player.new x: 1700, y: 1250
 		@player = Player.new x: @room.w / 2, y: @room.h / 2
@@ -34,8 +37,9 @@ class Game < Gosu::Window
 		$camera.move_to x: (@player.x - ($settings.screen(:w) / 2)), y: (@player.y - ($settings.screen(:h) / 2))
 	end
 
-	def load_level name, dir = DIR[:levels]
+	def load_level name = :sample, dir = DIR[:levels]
 		return nil  if (name.nil?)
+		name = random_level_name  if (name.to_s =~ /sample|random/)
 		return nil  unless (Dir.exists? dir)
 		level = nil
 		level_dir = File.join dir, name.to_s
@@ -60,14 +64,34 @@ class Game < Gosu::Window
 			end
 			level = Level.new(
 				rooms:  rooms,
-				config: config
+				config: config,
+				name:   name
 			)
 		end
 		return level
 	end
 
+	def random_level_name dir = DIR[:levels]
+		return  unless (File.directory? dir)
+		return Dir.new(dir).map do |file|
+			filepath = File.join dir, file
+			next nil  if (File.file?(filepath) || file =~ /\A\.{1,2}\z/)
+			next file.to_sym
+		end .reject { |v| v.nil? } .sample
+	end
+
 	def button_down id
 		close  if ($settings.controls(:close).include? id)
+
+		# New random room
+		unless (@level.nil?)
+			if ($settings.controls(:random_room).include? id)
+				@level = load_level :sample
+				@room = @level.get_room :sample
+				puts "Level: #{@level.name}"
+				puts "  Room: #{@room.name}"
+			end
+		end
 	end
 
 	def update

@@ -1,6 +1,10 @@
 
 class Level
+	attr_reader :name
+
 	def initialize args = {}
+		@name = args[:name]
+		@config = args[:config]
 		if (args[:rooms])
 			@rooms = gen_rooms args[:rooms]
 		else
@@ -17,7 +21,8 @@ class Level
 		rooms = {}
 		rooms_json.each do |name, json|
 			rooms[name] = Room.new(
-				instances: gen_instances(json["instances"])
+				instances: gen_instances(json["instances"]),
+				name:      name
 			)
 		end
 		return rooms

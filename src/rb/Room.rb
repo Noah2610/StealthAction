@@ -1,8 +1,9 @@
 
 class Room
-	attr_reader :x,:y, :w,:h, :instances
+	attr_reader :x,:y, :w,:h, :instances, :name
 
 	def initialize args = {}
+		@name = args[:name]
 		@x = args[:x] || 0
 		@y = args[:y] || 0
 		@w = args[:w] || $settings.rooms(:w)
