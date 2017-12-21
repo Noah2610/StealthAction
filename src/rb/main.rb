@@ -31,8 +31,9 @@ class Game < Gosu::Window
 		puts "  Room: #{@room.name}"
 
 		## Add player
-		#@player = Player.new x: 1700, y: 1250
-		@player = Player.new x: @room.w / 2, y: @room.h / 2
+		#@player = Player.new x: @room.w / 2, y: @room.h / 2
+		@player = Player.new spawn: @room.get_spawn
+
 		## Move camera to player
 		$camera.move_to x: (@player.x - ($settings.screen(:w) / 2)), y: (@player.y - ($settings.screen(:h) / 2))
 	end

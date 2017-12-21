@@ -3,8 +3,13 @@ class Player
 	attr_reader :x,:y
 
 	def initialize args = {}
-		@x = args[:x] || $settings.screen(:w) / 2
-		@y = args[:y] || $settings.screen(:h) / 2
+		if (args[:spawn])
+			@x = args[:spawn].pos(:x)
+			@y = args[:spawn].pos(:y)
+		else
+			@x = args[:x] || 0  #$settings.screen(:w) / 2
+			@y = args[:y] || 0  #$settings.screen(:h) / 2
+		end
 		@w = args[:w] || $settings.player(:w)
 		@h = args[:h] || $settings.player(:h)
 

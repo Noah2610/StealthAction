@@ -39,7 +39,6 @@ function init_panel(panel) {
 					settings.room_size.h = parseInt(val);
 					break;
 			}
-			console.log(settings.room_size);
 
 			update_panel(panel);
 			update_grid($('#grid'));
@@ -158,7 +157,7 @@ function load_level_file(event) {
 		const data = event.target.result;
 		load_level(data);
 	}
-	console.log(freader.readAsText(file));
+	freader.readAsText(file);
 }
 
 function toggle_panel(event) {

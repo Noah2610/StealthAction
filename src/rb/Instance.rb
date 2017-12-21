@@ -16,8 +16,23 @@ class Instance
 
 		# Flags
 		@solid = false
+		@check_collision = true
 
 		init args  if (defined? init)
+	end
+
+	def pos axis = :all
+		case axis
+		when :all
+			return {
+				x: @x,
+				y: @y
+			}
+		when :x
+			return @x
+		when :y
+			return @y
+		end
 	end
 
 	def set_room room
@@ -29,6 +44,10 @@ class Instance
 	end
 	def is_passable?
 		return !@solid
+	end
+
+	def check_collision?
+		return @check_collision
 	end
 
 	def pos axis

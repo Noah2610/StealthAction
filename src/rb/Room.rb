@@ -27,22 +27,29 @@ class Room
 		when :doors
 			return @instances.map do |instance|
 				next instance  if (instance.is_a? DoorInst)
-			end .reject { |v| v.nil? }
+			end .reject { |v| v.nil? || !v.check_collision? }
 		else
 			return nil
 		end
 	end
 
+	def get_spawn
+		return @instances.each do |instance|
+			return instance  if (instance.is_a? SpawnInst)
+		end
+		return nil
+	end
+
 	def solid_instances
 		return @instances.map do |instance|
 			next instance  if (instance.is_solid?)
-		end .reject { |v| v.nil? }
+		end .reject { |v| v.nil? || !v.check_collision? }
 	end
 
 	def passable_instances
 		return @instances.map do |instance|
 			next instance  if (instance.is_passable?)
-		end .reject { |v| v.nil? }
+		end .reject { |v| v.nil? || !v.check_collision? }
 	end
 
 	def draw_pos axis

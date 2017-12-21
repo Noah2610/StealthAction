@@ -10,7 +10,8 @@ COLORS = {
 	:default         =>  "#000000",
 	"WallSimpleInst" =>  "#666666",
 	"PassableInst"   =>  "#adffff",
-	"DoorInst"       =>  "#ba0000"
+	"DoorInst"       =>  "#ba0000",
+	"SpawnInst"      =>  "#e8e825"
 }
 
 instances = []
