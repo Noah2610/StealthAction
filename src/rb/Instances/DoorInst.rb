@@ -5,8 +5,8 @@ class DoorInst < Instance
 		@bg_outside = $settings.colors :red
 		@bg_inside = $settings.colors :brown
 		@bg = @bg_outside
-		#@z = 25
-		@z = 35
+		@z = 25
+		#@z = 35
 	end
 
 	def yes_collision

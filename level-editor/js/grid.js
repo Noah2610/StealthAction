@@ -111,7 +111,7 @@ $(document).ready(function () {
 	});
 
 	// Place block - left click
-	grid_wrapper.get(0).addEventListener("click", function (event) {
+	grid_wrapper.get(0).addEventListener("mousedown", function (event) {
 		handle_click(event, highlight);
 	});
 
