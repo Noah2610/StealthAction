@@ -43,10 +43,12 @@ br {
 #grid__block__highlight {
 	position: absolute;
 	opacity: 0.75;
+	z-index: 20;
 }
 
 .block {
 	position: absolute;
+	z-index: 10;
 }
 
 
@@ -61,6 +63,7 @@ br {
 	padding: 8px;
 	overflow-y: scroll;
 	height: 95%;
+	z-index: 100;
 }
 
 #panel__settings {

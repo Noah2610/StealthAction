@@ -4,7 +4,6 @@ class Player
 
 	def initialize args = {}
 		if (args[:spawn])
-			puts args[:spawn]
 			@x = args[:spawn].pos(:x)
 			@y = args[:spawn].pos(:y)
 		else
