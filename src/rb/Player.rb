@@ -1,6 +1,6 @@
 
 class Player
-	attr_reader :x,:y
+	attr_reader :x,:y, :vel
 
 	def initialize args = {}
 		if (args[:spawn])
@@ -224,35 +224,52 @@ class Player
 
 		collision? target: :passable
 
-		vel.each do |axis,speed|
-			speed.abs.round.times do |s|
+		moved_in = { x: false, y: false }
+		max_speed = vel.map { |a,s| next s.abs } .max
+		max_speed.round.times do |speed|
+			vel.each do |axis,s|
+				#next  if (s.abs <= speed)
+
 				case axis
 				when :x
-					if    (speed < 0)
+					if    (s < 0)
 						dir = :left
-					elsif (speed > 0)
+					elsif (s > 0)
 						dir = :right
 					end
 				when :y
-					if    (speed < 0)
+					if    (s < 0)
 						dir = :up
-					elsif (speed > 0)
+					elsif (s > 0)
 						dir = :down
 					end
 				end
 
+				moved_in_tmp = false
 				coll = collision? dir
 				case axis
 				when :x
-					@x += 1 * speed.sign  unless (coll)
-					@vel[:x] = 0          if (coll)
+					unless (coll)
+						@x += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:x]))
+						unless (moved_in[:x])
+							moved_in[:x] = true
+							moved_in_tmp = true
+						end
+					end
+					@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
 				when :y
-					@y += 1 * speed.sign  unless (coll)
-					@vel[:y] = 0          if (coll)
+					unless (coll)
+						@y += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:y]))
+						unless (moved_in[:y])
+							moved_in[:y] = true
+							moved_in_tmp = true
+						end
+					end
+					@vel[:y] = @vel_incr[:y] * s.sign  if (coll)
 				end
 
 				# Move camera with player
-				$camera.move dir, 1     unless (coll)
+				$camera.move dir, 1     if (!coll && (s.abs >= speed || s.abs < speed && moved_in_tmp))
 			end
 		end
 
