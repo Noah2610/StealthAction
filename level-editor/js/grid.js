@@ -46,7 +46,7 @@ function handle_mousemove(event, highlight) {
 	}
 }
 
-function handle_click(event, highlight) {
+function place_highlight(highlight = $('#grid__block__highlight')) {
 	const box_left = highlight.css("left");
 	const box_top = highlight.css("top");
 
@@ -71,17 +71,11 @@ function handle_click(event, highlight) {
 		block.css("height", highlight.css("height"));
 		block.css("background-color", highlight.css("background-color"));
 		block.data("instance", current_block());
-		block.data("test", "testval");
 
 	block_wrapper.append(block);
 }
 
-function handle_rightclick(event) {
-	const x = event.pageX;
-	const y = event.pageY;
-	const box_x = x - (x % settings.box_size.w);
-	const box_y = y - (y % settings.box_size.h);
-
+function remove_block(x, y) {
 	var block = false;
 	const blocks = $('.block');
 	blocks.each(function () {
@@ -99,6 +93,16 @@ function handle_rightclick(event) {
 
 	if (block)
 		block.remove();
+}
+
+function handle_click(event, highlight) {
+	place_highlight(highlight);
+}
+
+function handle_rightclick(event) {
+	const x = event.pageX;
+	const y = event.pageY;
+	remove_block(x, y);
 }
 
 $(document).ready(function () {

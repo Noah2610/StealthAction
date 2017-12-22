@@ -122,12 +122,14 @@ br {
 	position: fixed;
 	bottom: 32px;
 	left: 32px;
-	width: 32px;
+	width: auto;
+	min-width: 20px;
 	height: 32px;
+	padding: 0 6px;
 	line-height: 28px;
 	border: 1px solid black;
 	text-align: center;
-	font-size: 14px;
+	font-size: 12px;
 	/* font-weight: bold; */
 	vertical-align: middle;
 }

@@ -2,7 +2,20 @@
 var cur_keys = [];
 var mult = 0;
 const valid_keys = [
-	"x","X","y","Y","c","C","s","S","o","O","a","A","n","N","r"
+	"h","j","k","l",
+	"ArrowLeft","ArrowDown","ArrowUp","ArrowRight",
+	"g","G",
+	"H","L","M","m",
+	"0","$",
+	" ","Enter",
+	"d","Backspace",
+	"p",
+	"x","X","y","Y",
+	"c","C",
+	"s","S",
+	"o","O","a","A",
+	"n","N",
+	"r"
 ];
 const keys_max_length = 2;
 const box_size_step = 8;
@@ -135,7 +148,81 @@ function reset(target) {
 	update_panel();
 }
 
+function move_highlight(dir) {
+	const highlight = $('#grid__block__highlight');
+	const x = parseInt(highlight.data("x")) - (parseInt(highlight.data("x")) % settings.box_size.w);
+	const y = parseInt(highlight.data("y")) - (parseInt(highlight.data("y")) % settings.box_size.h);
+	const step = {
+		x: settings.box_size.w,
+		y: settings.box_size.h
+	}
+	switch (dir) {
+		case "left":
+			if ((x - step.x) >= 0)
+				highlight.data("x", x - step.x);
+			break;
+		case "right":
+			if ((x + step.x) < settings.room_size.w)
+				highlight.data("x", x + step.x);
+			break;
+		case "up":
+			if ((y - step.y) >= 0)
+				highlight.data("y", y - step.y);
+			break;
+		case "down":
+			if ((y + step.y) < settings.room_size.h)
+				highlight.data("y", y + step.y);
+			break;
+		default:
+			return;
+	}
+	update_highlight();
+}
+
+function remove_block_keypress() {
+	const highlight = $('#grid__block__highlight');
+	const x = highlight.data("x") + settings.block_offset.x;
+	const y = highlight.data("y") + settings.block_offset.y;
+	remove_block(x, y);
+}
+
+function move_highlight_to(target) {
+	const highlight = $('#grid__block__highlight');
+	var x, y, bottom, end;
+	switch (target) {
+		case "top":
+			highlight.data("y", "0");
+			break;
+		case "bottom":
+			bottom = (settings.room_size.h - 1) - ((settings.room_size.h - 1) % settings.box_size.h);
+			highlight.data("y", bottom);
+			break;
+		case "start":
+			highlight.data("x", "0");
+			break;
+		case "end":
+			end = (settings.room_size.w - 1) - ((settings.room_size.w - 1) % settings.box_size.w);
+			highlight.data("x", end);
+			break;
+		case "center":
+			x = ((settings.room_size.w / 2) - 1) - (((settings.room_size.w / 2) - 1) % settings.box_size.w);
+			y = ((settings.room_size.h / 2) - 1) - (((settings.room_size.h / 2) - 1) % settings.box_size.w);
+			highlight.data("x", x);
+			highlight.data("y", y);
+			break;
+		case "center_row":
+			y = ((settings.room_size.h / 2) - 1) - (((settings.room_size.h / 2) - 1) % settings.box_size.w);
+			highlight.data("y", y);
+			break;
+		default:
+			return;
+	}
+	update_highlight();
+}
+
+
 function handle_keypress(event) {
+	console.log(event.key);
 	// Return if target is inside panel
 	if ($(event.target).parents('#panel').length == 1)
 		return;
@@ -148,12 +235,13 @@ function handle_keypress(event) {
 
 	// Multiplier key - Number
 	if (event.key.match(/[0-9]/) != null) {
-		//set_mult(parseInt(event.key));
-		if (mult == 0)
-			mult = "";
-		mult = parseInt(String(mult) + event.key);
-		update_key_display();
-		return;
+		if (!(event.key == "0" && mult == 0)) {
+			if (mult == 0)
+				mult = "";
+			mult = parseInt(String(mult) + event.key);
+			update_key_display();
+			return;
+		}
 	}
 
 	// Return if not valid key
@@ -168,8 +256,71 @@ function handle_keypress(event) {
 	if (mult > 0)
 		loop = mult;
 
+	// Check key combination
 	for (var i = 0; i < loop; i++) {
 		switch (cur_keys.join("")) {
+			// hjkl, block movement
+			case "h":  // left
+			case "ArrowLeft":
+				move_highlight("left");
+				break;
+			case "l":  // right
+			case "ArrowRight":
+				move_highlight("right");
+				break;
+			case "k":  // up
+			case "ArrowUp":
+				move_highlight("up");
+				break;
+			case "j":  // down
+			case "ArrowDown":
+				move_highlight("down");
+				break;
+
+			// Move highlight to top row
+			case "g":
+			case "H":
+				move_highlight_to("top");
+				break;
+			// Move highlight to bottom row
+			case "G":
+			case "L":
+				move_highlight_to("bottom");
+				break;
+			// Move highlight to center row
+			case "M":
+				move_highlight_to("center_row");
+				break;
+			// Move highlight to center
+			case "m":
+				move_highlight_to("center");
+				break;
+			// Move highlight to beginning of row
+			case "0":
+				move_highlight_to("start");
+				break;
+			// Move highlight to end of row
+			case "$":
+				move_highlight_to("end");
+				break;
+
+			// Place block (highlight)
+			case " ":
+			case "Enter":
+				place_highlight();
+				break;
+
+			// Remove block
+			case "d":
+			case "Backspace":
+				remove_block_keypress();
+				break;
+
+			// Toggle panel
+			case "p":
+				toggle_panel();
+				break;
+
 			// Switch block size
 			case "x":
 				switch_block_size();

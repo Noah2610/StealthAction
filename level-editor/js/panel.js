@@ -164,14 +164,19 @@ function load_level_file(event) {
 
 function toggle_panel(event) {
 	const btn = $('#panel__toggle_panel');
+	const panel_wrapper = $('#panel');
 	const panel = $('#panel__settings');
 	if (panel.css("display") == "block") {
 		// Hide panel
 		panel.css("display", "none");
+		panel_wrapper.css("height", "auto");
+		panel_wrapper.css("overflow-y", "auto");
 		btn.val("<");
 	} else if (panel.css("display") == "none") {
 		// Show panel
 		panel.css("display", "block");
+		panel_wrapper.css("height", "95%");
+		panel_wrapper.css("overflow-y", "scroll");
 		btn.val(">");
 	}
 }
