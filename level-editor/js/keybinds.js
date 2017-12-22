@@ -284,7 +284,6 @@ function handle_keypress(event) {
 				break;
 
 			default:
-				console.log(event.key);
 				found_comb = false;
 		}
 	}
