@@ -100,11 +100,35 @@ br {
 	background-color: #cccccc;
 }
 
+.panel__shortcut {
+	font-size: 12px;
+	font-style: italic;
+}
+.panel__shortcut__key {
+	font-size: 13px;
+	font-weight: bold;
+}
+
 
 /* Textarea with calculated level-data json */
 #level_data {
 	display: block;
 	width: 100%;
 	margin-bottom: 16px;
+}
+
+/* Key combinations display */
+#key_display {
+	position: fixed;
+	bottom: 32px;
+	left: 32px;
+	width: 32px;
+	height: 32px;
+	line-height: 28px;
+	border: 1px solid black;
+	text-align: center;
+	font-size: 14px;
+	/* font-weight: bold; */
+	vertical-align: middle;
 }
 

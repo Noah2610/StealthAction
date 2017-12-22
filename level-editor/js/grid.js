@@ -1,5 +1,5 @@
 
-function update_highlight(highlight) {
+function update_highlight(highlight = $('#grid__block__highlight')) {
 	highlight.css("width", settings.block_size.w);
 	highlight.css("height", settings.block_size.h);
 	highlight.css("left", highlight.data("x") + settings.block_offset.x);

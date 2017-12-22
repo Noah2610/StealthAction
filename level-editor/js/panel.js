@@ -48,7 +48,7 @@ function init_panel(panel) {
 	update_panel(panel);
 }
 
-function update_panel(panel) {
+function update_panel(panel = $('#panel')) {
 	const box_size_el = {
 		w: panel.find('#panel__box_size__w'),
 		h: panel.find('#panel__box_size__h')
@@ -77,6 +77,8 @@ function update_panel(panel) {
 	block_offset_el.y.val(settings.block_offset.y);
 	room_size_el.w.val(settings.room_size.w);
 	room_size_el.h.val(settings.room_size.h);
+
+	update_highlight();
 }
 
 function populate_block_selector() {
@@ -93,18 +95,18 @@ function populate_block_selector() {
 				option.css("color", color);
 			block_selector.append(option);
 
-			block_selector_update_color({ target: block_selector.get(0) }, json);
+			block_selector_update_color(block_selector.get(0), json);
 
 			// EventListener for color changing when selecting option
-			block_selector.get(0).addEventListener("change", function (event) {
-				block_selector_update_color(event, json);
+			block_selector.on("change", function (event) {
+				block_selector_update_color(event.target, json);
 			});
 		});
 	});
 }
 
-function block_selector_update_color(event, json) {
-	const select = $(event.target);
+function block_selector_update_color(target, json) {
+	const select = $(target);
 	json.forEach(function (instance) {
 		if (instance.name == select.val()) {
 			select.css("color", instance.color);

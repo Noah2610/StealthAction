@@ -9,6 +9,7 @@
 	<body>
 
 		<a target="_blank" id="download_level" style="display: none;"></a>
+		<div id="key_display"></div>
 
 		<div id="grid_wrapper">
 			<span class="grid__box" id="grid__block__highlight" data-x="-256" data-y="-256"></span>
@@ -47,7 +48,8 @@
 				</div>
 				
 				<div class="panel__group" id="panel__grid_size">
-					<strong>Cell Size</strong><br />
+					<strong>Cell Size</strong>
+					<span class="panel__shortcut">shortcut: <span class="panel__shortcut__key">c</span></span><br />
 					<div>
 						w: <input type="text" id="panel__box_size__w"></input>
 					</div>
@@ -57,7 +59,8 @@
 				</div>
 				
 				<div class="panel__group" id="panel__block_size">
-					<strong>Block size</strong><br />
+					<strong>Block size</strong>
+					<span class="panel__shortcut">shortcut: <span class="panel__shortcut__key">s</span></span><br />
 					<div>
 						w: <input type="text" id="panel__block_size__w"></input>
 					</div>
@@ -67,7 +70,8 @@
 				</div>
 				
 				<div class="panel__group" id="panel__block_offset">
-					<strong>Block offset</strong><br />
+					<strong>Block offset</strong>
+					<span class="panel__shortcut">shortcut: <span class="panel__shortcut__key">o,a</span></span><br />
 					<div>
 						x: <input type="text" id="panel__block_offset__x"></input>
 					</div>
@@ -81,8 +85,10 @@
 			</div>
 		</div>
 
+		<script type="text/javascript" src="./js/settings.js"></script>
 		<script type="text/javascript" src="./js/main.js"></script>
 		<script type="text/javascript" src="./js/grid.js"></script>
 		<script type="text/javascript" src="./js/panel.js"></script>
+		<script type="text/javascript" src="./js/keybinds.js"></script>
 	</body>
 </html>

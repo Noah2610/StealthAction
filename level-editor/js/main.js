@@ -1,26 +1,42 @@
 
-const default_settings = {
-	screen: {
-		w: parseInt($('#grid_wrapper').css("width")),
-		h: parseInt($('#grid_wrapper').css("height"))
-	},
-	box_size: {
-		w: 32, h: 32
-	},
-	block_size: {
-		w: 32, h: 32
-	},
-	block_offset: {
-		x: 0, y: 0
-	},
-	room_size: {
-		w: 960, h: 640
-	},
+// Copy object recursively
+//  https://stackoverflow.com/a/24648941
+function deep_copy(o) {
+	const gdcc = "__getDeepCircularCopy__";
+	if (o !== Object(o)) {
+		return o; // primitive value
 
-	colors: {}
-};
+	}
 
-var settings = default_settings;
+	var set = gdcc in o,
+		cache = o[gdcc],
+		result;
+	if (set && typeof cache == "function") {
+		return cache();
+
+	}
+	// else
+	o[gdcc] = function() { return result;  }; // overwrite
+	if (o instanceof Array) {
+		result = [];
+		for (var i=0; i<o.length; i++) {
+			result[i] = deep_copy(o[i]);
+		}
+	} else {
+		result = {};
+		for (var prop in o)
+			if (prop != gdcc)
+				result[prop] = deep_copy(o[prop]);
+		else if (set)
+			result[prop] = deep_copy(cache);
+	}
+	if (set) {
+		o[gdcc] = cache; // reset
+	} else {
+		delete o[gdcc]; // unset again
+	}
+	return result;
+}
 
 function copy_to_clipboard(text) {
 	var textArea = document.createElement("textarea");
