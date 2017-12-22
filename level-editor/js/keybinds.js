@@ -262,15 +262,19 @@ function handle_keypress(event) {
 
 			// RESETS
 			// Reset box size
+			case "rc":
 			case "cr":
 				reset("box");
 				break;
 			// Reset block size
+			case "rs":
 			case "sr":
 				reset("block");
 				break;
 			// Reset offset size
+			case "ro":
 			case "or":
+			case "ra":
 			case "ar":
 				reset("offset");
 				break;
