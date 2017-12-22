@@ -439,6 +439,7 @@ class Player
 
 	def decr_vel axes
 		axes.each do |axis|
+			next  if (@vel[axis] == 0)
 			if    (@vel[axis] < 0)
 				@vel[axis] += @vel_decr[axis]
 				@vel[axis] = 0  if (@vel[axis] > 0)
