@@ -76,13 +76,16 @@ function save_level() {
 	var blocks = [];
 
 	blocks_el.each(function (index) {
-		blocks.push({
-			x:    parseInt($(this).css("left")),
-			y:    parseInt($(this).css("top")),
-			w:    parseInt($(this).css("width")),
-			h:    parseInt($(this).css("height")),
-			type: $(this).data("instance")
-		});
+		const b = $(this);
+		if (b.data("instance") && !(parseInt(b.css("width")) == 0 || parseInt(b.css("height")) == 0 )) {
+			blocks.push({
+				x:    parseInt(b.css("left")),
+				y:    parseInt(b.css("top")),
+				w:    parseInt(b.css("width")),
+				h:    parseInt(b.css("height")),
+				type: b.data("instance")
+			});
+		}
 	});
 
 	const data = {

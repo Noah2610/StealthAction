@@ -15,7 +15,8 @@ class Player
 
 		@z = 30
 		@c = $settings.colors(:blue)
-		@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
+		#@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
+		@collision_padding = (@w.to_f / $settings.player(:collision_padding).to_f).round
 		@step_sneak = $settings.player(:step_sneak)
 
 		@step = args[:step] || $settings.player(:step)

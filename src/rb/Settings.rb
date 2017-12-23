@@ -29,8 +29,8 @@ class Settings
 
 			player: {
 				size: {
-					w: 32,
-					h: 32
+					w: 16,
+					h: 16
 				},
 				step:              1,
 				step_sneak:        0.4,    # times velocity
@@ -47,7 +47,8 @@ class Settings
 					y: 4
 				},
 				move_interval:     4,
-				collision_padding: 12
+				#collision_padding: 12,
+				collision_padding: 3       # divided by size
 			},
 
 			rooms: {

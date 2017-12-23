@@ -134,7 +134,8 @@ function reset(target) {
 			update_grid();
 			break;
 		case "block":
-			settings.block_size = deep_copy(default_settings.block_size);
+			//settings.block_size = deep_copy(default_settings.block_size);
+			settings.block_size = deep_copy(settings.box_size);
 			break;
 		case "offset":
 			settings.block_offset = deep_copy(default_settings.block_offset);
@@ -222,7 +223,6 @@ function move_highlight_to(target) {
 
 
 function handle_keypress(event) {
-	console.log(event.key);
 	// Return if target is inside panel
 	if ($(event.target).parents('#panel').length == 1)
 		return;
