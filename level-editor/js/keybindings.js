@@ -1,6 +1,7 @@
 
 var cur_keys = [];
 var mult = 0;
+var controls = {};
 const valid_keys = [
 	"h","j","k","l",
 	"ArrowLeft","ArrowDown","ArrowUp","ArrowRight",
@@ -15,7 +16,8 @@ const valid_keys = [
 	"s","S",
 	"o","O","a","A",
 	"n","N",
-	"r"
+	"r",
+	"q","Q"
 ];
 const keys_max_length = 2;
 const box_size_step = 8;
@@ -129,21 +131,21 @@ function prev_block() {
 
 function reset(target) {
 	switch (target) {
-		case "box":
+		case "box_size":
 			settings.box_size = deep_copy(default_settings.box_size);
 			update_grid();
 			break;
-		case "block":
+		case "block_size":
 			//settings.block_size = deep_copy(default_settings.block_size);
 			settings.block_size = deep_copy(settings.box_size);
 			break;
-		case "offset":
+		case "block_offset":
 			settings.block_offset = deep_copy(default_settings.block_offset);
 			break;
 		case "all":
-			reset("box");
-			reset("block");
-			reset("offset");
+			reset("box_size");
+			reset("block_size");
+			reset("block_offset");
 			break;
 	}
 	update_panel();
@@ -250,193 +252,155 @@ function handle_keypress(event) {
 
 	add_key(event.key);
 
-	var found_comb = true;
+	var found_comb = false;
 
 	var loop = 1;
 	if (mult > 0)
 		loop = mult;
 
 	// Check key combination
+	const comb = cur_keys.join("");
 	for (var i = 0; i < loop; i++) {
-		switch (cur_keys.join("")) {
-			// hjkl, block movement
-			case "h":  // left
-			case "ArrowLeft":
-				move_highlight("left");
-				break;
-			case "l":  // right
-			case "ArrowRight":
-				move_highlight("right");
-				break;
-			case "k":  // up
-			case "ArrowUp":
-				move_highlight("up");
-				break;
-			case "j":  // down
-			case "ArrowDown":
-				move_highlight("down");
-				break;
+		// hjkl, navigation
+		Object.keys(controls.directional).forEach(function (dir) {
+			if (controls.directional[dir].includes(comb)) {
+				move_highlight(dir);
+				found_comb = true;
+				return;
+			}
+		});
 
-			// Move highlight to top row
-			case "g":
-			case "H":
-				move_highlight_to("top");
-				break;
-			// Move highlight to bottom row
-			case "G":
-			case "L":
-				move_highlight_to("bottom");
-				break;
-			// Move highlight to center row
-			case "M":
-				move_highlight_to("center_row");
-				break;
-			// Move highlight to center
-			case "m":
-				move_highlight_to("center");
-				break;
-			// Move highlight to beginning of row
-			case "0":
-				move_highlight_to("start");
-				break;
-			// Move highlight to end of row
-			case "$":
-				move_highlight_to("end");
-				break;
+		// Increase box size
+		Object.keys(controls.increase_box_size).forEach(function (axis) {
+			if (controls.increase_box_size[axis].includes(comb)) {
+				increase_box_size(axis);
+				found_comb = true;
+				return;
+			}
+		});
+		// Decrease box size
+		Object.keys(controls.decrease_box_size).forEach(function (axis) {
+			if (controls.decrease_box_size[axis].includes(comb)) {
+				decrease_box_size(axis);
+				found_comb = true;
+				return;
+			}
+		});
 
-			// Place block (highlight)
-			case " ":
-			case "Enter":
-				place_highlight();
-				break;
+		// Increase block size
+		Object.keys(controls.increase_block_size).forEach(function (axis) {
+			if (controls.increase_block_size[axis].includes(comb)) {
+				increase_block_size(axis);
+				found_comb = true;
+				return;
+			}
+		});
+		// Decrease block size
+		Object.keys(controls.decrease_block_size).forEach(function (axis) {
+			if (controls.decrease_block_size[axis].includes(comb)) {
+				decrease_block_size(axis);
+				found_comb = true;
+				return;
+			}
+		});
 
-			// Remove block
-			case "d":
-			case "Backspace":
-				remove_block_keypress();
-				break;
+		// Increase block offset
+		Object.keys(controls.increase_block_offset).forEach(function (axis) {
+			if (controls.increase_block_offset[axis].includes(comb)) {
+				increase_block_offset(axis);
+				found_comb = true;
+				return;
+			}
+		});
+		// Decrease block offset
+		Object.keys(controls.decrease_block_offset).forEach(function (axis) {
+			if (controls.decrease_block_offset[axis].includes(comb)) {
+				decrease_block_offset(axis);
+				found_comb = true;
+				return;
+			}
+		});
 
-			// Toggle panel
-			case "p":
-				toggle_panel();
-				break;
+		// Resets
+		Object.keys(controls.reset).forEach(function (target) {
+			if (controls.reset[target].includes(comb)) {
+				reset(target);
+				found_comb = true;
+				return;
+			}
+		});
 
-			// Switch block size
-			case "x":
-				switch_block_size();
-				break;
-			// Switch block offset
-			case "X":
-				switch_block_offset();
-				break;
+		// Move highlight to center of grid
+		if (controls.center.includes(comb)) {
+			move_highlight_to("center");
+			found_comb = true;
+		} else if (controls.center.includes(comb)) {
+		// Move highlight to center of grid
+			move_highlight_to("center");
+			found_comb = true;
+		} else if (controls.row_top.includes(comb)) {
+		// Move highlight to top row
+			move_highlight_to("top");
+			found_comb = true;
+		} else if (controls.row_bottom.includes(comb)) {
+		// Move highlight to bottom row
+			move_highlight_to("bottom");
+			found_comb = true;
+		} else if (controls.row_center.includes(comb)) {
+		// Move highlight to center row
+			move_highlight_to("center_row");
+			found_comb = true;
+		} else if (controls.row_start.includes(comb)) {
+		// Move highlight to start row
+			move_highlight_to("start");
+			found_comb = true;
+		} else if (controls.row_end.includes(comb)) {
+		// Move highlight to end row
+			move_highlight_to("end");
+			found_comb = true;
 
-			// Increase box size - w
-			case "cx":
-				increase_box_size("w");
-				break;
-			// Increase box size - h
-			case "cy":
-				increase_box_size("h");
-				break;
-			// Decrease box size - w
-			case "cX":
-			case "Cx":
-			case "CX":
-				decrease_box_size("w");
-				break;
-			// Decrease box size - h
-			case "cY":
-			case "Cy":
-			case "CY":
-				decrease_box_size("h");
-				break;
+		} else if (controls.place_block.includes(comb)) {
+		// Place highlight
+			place_highlight();
+			found_comb = true;
+		} else if (controls.remove_block.includes(comb)) {
+		// Remove block
+			remove_block_keypress();
+			found_comb = true;
 
-			// Increase block size - w
-			case "sx":
-				increase_block_size("w");
-				break;
-			// Increase block size - h
-			case "sy":
-				increase_block_size("h");
-				break;
-			// Decrease block size - w
-			case "sX":
-			case "Sx":
-			case "SX":
-				decrease_block_size("w");
-				break;
-			// Decrease block size - h
-			case "sY":
-			case "Sy":
-			case "SY":
-				decrease_block_size("h");
-				break;
+		} else if (controls.toggle_panel.includes(comb)) {
+		// Toggle panel
+			toggle_panel();
+			found_comb = true;
 
-			// Increase block offset - x
-			case "ox":
-			case "ax":
-				increase_block_offset("x");
-				break;
-			// Increase block offset - y
-			case "oy":
-			case "ay":
-				increase_block_offset("y");
-				break;
-			// Decrease block offset - x
-			case "oX":
-			case "Ox":
-			case "OX":
-			case "aX":
-			case "Ax":
-			case "AX":
-				decrease_block_offset("x");
-				break;
-			// Decrease block offset - y
-			case "oY":
-			case "Oy":
-			case "OY":
-			case "aY":
-			case "Ay":
-			case "AY":
-				decrease_block_offset("y");
-				break;
+		} else if (controls.switch_block_size.includes(comb)) {
+		// Switch block size
+			switch_block_size();
+			found_comb = true;
+		} else if (controls.switch_block_offset.includes(comb)) {
+		// Switch block offset
+			switch_block_offset();
+			found_comb = true;
 
-			// BLOCK SELECTIOn
-			// Next block
-			case "n":
-				next_block();
-				break;
-			// Previous block
-			case "N":
-				prev_block();
-				break;
+		} else if (controls.next_block.includes(comb)) {
+		// Select next block
+			next_block();
+			found_comb = true;
+		} else if (controls.prev_block.includes(comb)) {
+		// Select previous block
+			prev_block();
+			found_comb = true;
 
-			// RESETS
-			// Reset box size
-			case "rc":
-			case "cr":
-				reset("box");
-				break;
-			// Reset block size
-			case "rs":
-			case "sr":
-				reset("block");
-				break;
-			// Reset offset size
-			case "ro":
-			case "or":
-			case "ra":
-			case "ar":
-				reset("offset");
-				break;
-			// Reset ALL
-			case "rr":
-				reset("all");
-				break;
-
-			default:
-				found_comb = false;
+		} else if (controls.load_level.includes(comb)) {
+		// Load level (user needs to disable popup blocking)
+			$('#load_level').click();
+			found_comb = true;
+		} else if (controls.save_level.includes(comb)) {
+		// Save / Download level
+			save_level();
+			found_comb = true;
 		}
+
 	}
 
 	if (found_comb) {
@@ -447,6 +411,9 @@ function handle_keypress(event) {
 
 
 $(document).ready(function () {
-	document.addEventListener("keydown", handle_keypress);
+	$.getJSON("./keybindings.json", function (json) {
+		controls = json;
+		document.addEventListener("keydown", handle_keypress);
+	});
 });
 
