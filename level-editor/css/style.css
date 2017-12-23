@@ -18,25 +18,16 @@ br {
 	margin: 0;
 	padding: 0;
 	font-size: 0;
-	-webkit-box-shadow: inset 0px 0px 0px 2px #000;
-	-moz-box-shadow: inset 0px 0px 0px 2px #000;
 	box-shadow: inset 0px 0px 0px 2px #000;
 }
 
 #grid {
-	/*
-	width: 960px;
-	height: 640px;
-	*/
 }
 
 .grid__box {
 	display: inline-block;
-	/* border: 1px solid black; */
 	margin: 0;
 	padding: 0;
-	-webkit-box-shadow: inset 0px 0px 0px 2px #000;
-	-moz-box-shadow: inset 0px 0px 0px 2px #000;
 	box-shadow: inset 0px 0px 0px 2px #000;
 }
 
@@ -69,7 +60,6 @@ br {
 #panel__settings {
 	display: block;
 	width: 360px;
-	/* height: 640px; */
 }
 
 .panel__group {
@@ -130,7 +120,6 @@ br {
 	border: 1px solid black;
 	text-align: center;
 	font-size: 12px;
-	/* font-weight: bold; */
 	vertical-align: middle;
 }
 

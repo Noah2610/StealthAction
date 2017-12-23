@@ -9,18 +9,20 @@ const valid_keys = [
 	"H","L","M","m",
 	"0","$",
 	" ","Enter",
-	"d","Backspace",
+	"x","Backspace",
 	"p",
-	"x","X","y","Y",
-	"c","C",
+	"b",
+	"d","D",
 	"s","S",
-	"o","O","a","A",
+	"a","A",
+	"q","Q",
 	"n","N",
 	"r",
-	"q","Q"
+	"O","W"
 ];
 const keys_max_length = 2;
 const box_size_step = 8;
+const min_box_size = 8;
 
 function update_key_display() {
 	var m = "";
@@ -60,38 +62,71 @@ function switch_block_offset() {
 }
 
 function increase_box_size(axis) {
-	settings.box_size[axis] += box_size_step;
+	var step = box_size_step;
+	if (axis == "W" || axis == "H") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[axis];
+	}
+	settings.box_size[axis] += step;
 	update_panel();
 	update_grid();
+
 }
 function decrease_box_size(axis) {
-	settings.box_size[axis] -= box_size_step;
-	update_panel();
-	update_grid();
+	var step = box_size_step;
+	if (axis == "W" || axis == "H") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[axis];
+	}
+	if (settings.box_size[axis] - step >= min_box_size) {
+		settings.box_size[axis] -= step;
+		update_panel();
+		update_grid();
+	}
 }
 
 function increase_block_size(axis) {
-	const step = Math.round(settings.box_size[axis] / 4);
+	var step = Math.round(settings.box_size[axis.toLowerCase()] / 4);
+	if (axis == "W" || axis == "H") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[axis];
+	}
 	settings.block_size[axis] += step;
 	update_panel();
 }
 function decrease_block_size(axis) {
-	const step = Math.round(settings.box_size[axis] / 4);
-	settings.block_size[axis] -= step;
-	update_panel();
+	var step = Math.round(settings.box_size[axis.toLowerCase()] / 4);
+	if (axis == "W" || axis == "H") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[axis];
+	}
+	if (settings.block_size[axis] - step > 0) {
+		settings.block_size[axis] -= step;
+		update_panel();
+	}
 }
 
 function increase_block_offset(axis) {
-	const side = axis == "x" ? "w" : "h";
-	const step = Math.round(settings.box_size[side] / 4);
+	const side = axis.toLowerCase() == "x" ? "w" : "h";
+	var step = Math.round(settings.box_size[side] / 4);
+	if (axis == "X" || axis == "Y") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[side];
+	}
 	settings.block_offset[axis] += step;
 	update_panel();
 }
 function decrease_block_offset(axis) {
-	const side = axis == "x" ? "w" : "h";
-	const step = Math.round(settings.box_size[side] / 4);
-	settings.block_offset[axis] -= step;
-	update_panel();
+	const side = axis.toLowerCase() == "x" ? "w" : "h";
+	var step = Math.round(settings.box_size[side] / 4);
+	if (axis == "X" || axis == "Y") {
+		axis = axis.toLowerCase();
+		step = settings.box_size[side];
+	}
+	if (settings.block_offset[axis] - step >= 0) {
+		settings.block_offset[axis] -= step;
+		update_panel();
+	}
 }
 
 function next_block() {
@@ -225,6 +260,9 @@ function move_highlight_to(target) {
 
 
 function handle_keypress(event) {
+	if (event.ctrlKey)
+		return;
+
 	// Return if target is inside panel
 	if ($(event.target).parents('#panel').length == 1)
 		return;
@@ -372,6 +410,10 @@ function handle_keypress(event) {
 		// Toggle panel
 			toggle_panel();
 			found_comb = true;
+		} else if (controls.toggle_borders.includes(comb)) {
+		// Toggle grid borders (box-shadows)
+			toggle_borders();
+			found_comb = true;
 
 		} else if (controls.switch_block_size.includes(comb)) {
 		// Switch block size
@@ -401,10 +443,15 @@ function handle_keypress(event) {
 			found_comb = true;
 		}
 
+		// Break out of loop if combination isn't valid
+		if (!found_comb)
+			break;
+
 	}
 
 	if (found_comb) {
 		clear_keys();
+		event.preventDefault();
 	}
 
 }

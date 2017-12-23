@@ -15,33 +15,46 @@
 	"place_block":          [" ","Enter"],
 	"remove_block":         ["x","Backspace"],
 	"toggle_panel":         ["p"],
+	"toggle_borders":       ["b"],
 	"switch_block_size":    ["q"],
 	"switch_block_offset":  ["Q"],
 	"next_block":           ["n"],
 	"prev_block":           ["N"],
 	"increase_box_size": {
 		"w": ["dl","dArrowRight"],
-		"h": ["dj","dArrowDown"]
+		"h": ["dj","dArrowDown"],
+		"W": ["Dl","DArrowRight"],
+		"H": ["Dj","DArrowDown"]
 	},
 	"decrease_box_size": {
 		"w": ["dh","dArrowLeft"],
-		"h": ["dk","dArrowUp"]
+		"h": ["dk","dArrowUp"],
+		"W": ["Dh","DArrowLeft"],
+		"H": ["Dk","DArrowUp"]
 	},
 	"increase_block_size": {
 		"w": ["sl","sArrowRight"],
-		"h": ["sj","sArrowDown"]
+		"h": ["sj","sArrowDown"],
+		"W": ["Sl","SArrowRight"],
+		"H": ["Sj","SArrowDown"]
 	},
 	"decrease_block_size": {
 		"w": ["sh","sArrowLeft"],
-		"h": ["sk","sArrowUp"]
+		"h": ["sk","sArrowUp"],
+		"W": ["Sh","SArrowLeft"],
+		"H": ["Sk","SArrowUp"]
 	},
 	"increase_block_offset": {
 		"x": ["al","aArrowRight"],
-		"y": ["aj","aArrowDown"]
+		"y": ["aj","aArrowDown"],
+		"X": ["Al","AArrowRight"],
+		"Y": ["Aj","AArrowDown"]
 	},
 	"decrease_block_offset": {
 		"x": ["ah","aArrowLeft"],
-		"y": ["ak","aArrowUp"]
+		"y": ["ak","aArrowUp"],
+		"X": ["Ah","AArrowLeft"],
+		"Y": ["Ak","AArrowUp"]
 	},
 	"reset": {
 		"all":          ["rr"],
@@ -50,6 +63,6 @@
 		"block_offset": ["ra","ar"]
 	},
 	"load_level":     ["O"],
-	"save_level":     ["S"]
+	"save_level":     ["W"]
 }
 

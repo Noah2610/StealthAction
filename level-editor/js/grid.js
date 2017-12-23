@@ -105,6 +105,23 @@ function handle_rightclick(event) {
 	remove_block(x, y);
 }
 
+function toggle_borders() {
+	const boxes = $('.grid__box').not('.block').not('#grid__box__block');
+	var val;
+	if ($(boxes.get(0)).css("box-shadow") == "none") {
+		// Add borders
+		val = "inset 0px 0px 0px 2px #000";
+		//val = "inline-block";
+	} else {
+		// Remove borders
+		val = "none";
+	}
+	boxes.each(function () {
+		const b = $(this);
+		b.css("box-shadow", val);
+	});
+}
+
 $(document).ready(function () {
 
 	const grid_wrapper = $('#grid_wrapper');
