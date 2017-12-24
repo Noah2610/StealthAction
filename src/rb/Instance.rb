@@ -74,9 +74,9 @@ class Instance
 		end
 	end
 
-	def yes_collision
+	def yes_collision with = nil
 	end
-	def no_collision
+	def no_collision with = nil
 	end
 
 	def update

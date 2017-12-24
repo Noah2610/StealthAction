@@ -1,6 +1,6 @@
 
 class Game < Gosu::Window
-	attr_reader :room, :player
+	attr_reader :room, :player, :entities
 
 	def initialize
 		@x = @y = 0
@@ -34,7 +34,11 @@ class Game < Gosu::Window
 		#@player = Player.new x: @room.w / 2, y: @room.h / 2
 		@player = Player.new spawn: @room.get_spawn
 
-		@entities = [@player, Enemy.new]
+		@entities = [
+			@player,
+			Enemy.new, Enemy.new, Enemy.new,
+			Enemy.new, Enemy.new, Enemy.new
+		]
 
 		## Move camera to player
 		$camera.center_on x: @player.x, y: @player.y

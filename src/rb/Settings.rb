@@ -33,8 +33,8 @@ class Settings
 					h: 32
 				},
 				max_vel: {
-					x: 6,
-					y: 6
+					x: 4,
+					y: 4
 				},
 				vel_incr: {
 					x: 1,

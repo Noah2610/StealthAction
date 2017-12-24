@@ -22,6 +22,7 @@ class Entity
 		@collision_padding = nil
 		@check_collision = false
 		@camera_follows = false
+		@solid = true
 
 		init args  if (defined? init)
 	end
@@ -48,8 +49,6 @@ class Entity
 		when :solid
 			collision = false
 			$game.room.solid_instances.each do |instance|
-				## Check inside player if instance is smaller
-
 				inst = set_inst instance
 				smaller = check_smaller instance
 
@@ -125,7 +124,7 @@ class Entity
 				end
 			end
 
-			collision.yes_collision  if (collision)
+			collision.yes_collision self  if (collision)
 			return collision
 
 		## Check passable, non-solid instances only
@@ -159,11 +158,12 @@ class Entity
 							((x + w) >= inst[:x])   ))  )
 					collisions << instance
 				else
-					instance.no_collision
+					instance.no_collision self
 				end
 			end
 
-			collisions.each &:yes_collision
+			#collisions.each &:yes_collision
+			collisions.each { |c| c.yes_collision self }
 			return collisions
 
 		## Check doors - TODO deprecated, using passable collision checking for doors ^
@@ -246,6 +246,9 @@ class Entity
 				case axis
 				when :x
 					unless (coll)
+						if ((@x + s.sign) < 0 || (@x + s.sign) > ($game.room.w - @w))
+							return
+						end
 						@x += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:x]))
 						unless (moved_in[:x])
 							moved_in[:x] = true
@@ -255,6 +258,9 @@ class Entity
 					#@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
 				when :y
 					unless (coll)
+						if ((@y + s.sign) < 0 || (@y + s.sign) > ($game.room.h - @h))
+							return
+						end
 						@y += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:y]))
 						unless (moved_in[:y])
 							moved_in[:y] = true
