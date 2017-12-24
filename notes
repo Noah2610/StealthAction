@@ -4,6 +4,7 @@ z-indices:
 	room_bg:        10
 	instance_bg:    20
 	door_instance:  25
+	entities:       30
 	player:         30
 
 TODO:

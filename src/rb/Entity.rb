@@ -1,33 +1,29 @@
 
-class Player
-	attr_reader :x,:y, :vel
+class Entity
+	attr_reader :x,:y
 
 	def initialize args = {}
-		if (args[:spawn])
-			@x = args[:spawn].pos(:x)
-			@y = args[:spawn].pos(:y)
-		else
-			@x = args[:x] || 0  #$settings.screen(:w) / 2
-			@y = args[:y] || 0  #$settings.screen(:h) / 2
-		end
-		@w = args[:w] || $settings.player(:w)
-		@h = args[:h] || $settings.player(:h)
+		@x = args[:x] || 0
+		@y = args[:y] || 0
+		@w = args[:w] || $settings.entities(:w)
+		@h = args[:h] || $settings.entities(:h)
 
 		@z = 30
-		@c = $settings.colors(:blue)
-		#@collision_padding = $settings.player(:collision_padding)  # if only n pixels to a side are colliding and center is free, let the player move and adjust potition
-		@collision_padding = (@w.to_f / $settings.player(:collision_padding).to_f).round
-		@step_sneak = $settings.player(:step_sneak)
-
-		@step = args[:step] || $settings.player(:step)
-		@sneaking = false
+		@c = $settings.colors(:gray)
 
 		@vel = {
 			x: 0, y: 0
 		}
-		@max_vel = $settings.player(:max_vel)
-		@vel_incr = $settings.player(:vel_incr)
-		@vel_decr = $settings.player(:vel_decr)
+
+		@max_vel = $settings.entities(:max_vel)
+		@vel_incr = $settings.entities(:vel_incr)
+		@vel_decr = $settings.entities(:vel_decr)
+
+		@collision_padding = nil
+		@check_collision = false
+		@camera_follows = false
+
+		init args  if (defined? init)
 	end
 
 	def set_inst instance
@@ -222,7 +218,7 @@ class Player
 
 		## Check if player collides with any door
 
-		collision? target: :passable
+		collision? target: :passable  if (@check_collision)
 
 		moved_in = { x: false, y: false }
 		max_speed = vel.map { |a,s| next s.abs } .max
@@ -246,7 +242,7 @@ class Player
 				end
 
 				moved_in_tmp = false
-				coll = collision? dir
+				coll = @check_collision ? collision?(dir) : false
 				case axis
 				when :x
 					unless (coll)
@@ -268,7 +264,7 @@ class Player
 					#@vel[:y] = @vel_incr[:y] * s.sign  if (coll)
 				end
 
-				if (coll)
+				if (coll && @collision_padding)
 					collision_padded = false
 					# Slide into hole - collision_padding
 					if (@vel.map { |k,v| v.abs > 0 } .count(true) == 1)
@@ -280,7 +276,7 @@ class Player
 												 @x + n, @y,
 												 @w, @h) )
 									@x += n
-									$camera.move :right, n
+									$camera.move :right, n  if (@camera_follows)
 									collision_padded = true
 									break
 								elsif ( !collision?(
@@ -288,7 +284,7 @@ class Player
 												 @x - n, @y,
 												 @w, @h) )
 									@x -= n
-									$camera.move :left, n
+									$camera.move :left, n   if (@camera_follows)
 									collision_padded = true
 									break
 								end
@@ -299,7 +295,7 @@ class Player
 												 @x, @y + n,
 												 @w, @h) )
 									@y += n
-									$camera.move :down, n
+									$camera.move :down, n   if (@camera_follows)
 									collision_padded = true
 									break
 								elsif ( !collision?(
@@ -307,7 +303,7 @@ class Player
 												 @x, @y - n,
 												 @w, @h) )
 									@y -= n
-									$camera.move :up, n
+									$camera.move :up, n     if (@camera_follows)
 									collision_padded = true
 									break
 								end
@@ -326,75 +322,9 @@ class Player
 				end
 
 				# Move camera with player
-				$camera.move dir, 1     if (!coll && (s.abs >= speed || s.abs < speed && moved_in_tmp))
+				$camera.move dir, 1     if (!coll && (s.abs >= speed || s.abs < speed && moved_in_tmp))  if (@camera_follows)
 			end
 		end
-
-=begin
-		step.round.times do |s|
-			dirs.each do |dir|
-				unless (collision? dir)
-					case dir
-					when :up
-						@y -= 1
-					when :down
-						@y += 1
-					when :left
-						@x -= 1
-					when :right
-						@x += 1
-					end
-
-					# Camera moves with player
-					$camera.move dir, 1  unless (dir.nil?)
-
-				else
-					# Collision
-					# Slide into hole - collision_padding
-					if (dirs.size == 1)
-						@collision_padding.times do |n|
-							case dir
-							when :up, :down
-								if    ( !collision?(
-												 dir,
-												 @x + n, @y,
-												 @w, @h) )
-									@x += n
-									$camera.move :right, n
-									break
-								elsif ( !collision?(
-												 dir,
-												 @x - n, @y,
-												 @w, @h) )
-									@x -= n
-									$camera.move :left, n
-									break
-								end
-
-							when :left, :right
-								if    ( !collision?(
-												 dir,
-												 @x, @y + n,
-												 @w, @h) )
-									@y += n
-									$camera.move :down, n
-									break
-								elsif ( !collision?(
-												 dir,
-												 @x, @y - n,
-												 @w, @h) )
-									@y -= n
-									$camera.move :up, n
-									break
-								end
-							end
-						end
-					end
-				end
-
-			end
-		end
-=end
 
 		# Camera sticks to player
 		#$camera.move_to(
@@ -462,17 +392,11 @@ class Player
 		return @sneaking
 	end
 
-	def move_to_spawn spawn
-		return if (spawn.nil?)
-		@x = spawn.pos :x
-		@y = spawn.pos :y
-		## Move camera to player
-		$camera.center_on x: @x, y: @y
-	end
-
 	def update
-		## Move player
+		## Move entity
 		move is_sneaking?
+
+		update_custom  if (defined? update_custom)
 	end
 
 	def draw_pos axis
@@ -487,8 +411,10 @@ class Player
 	end
 
 	def draw
-		# Draw player
+		# Draw entity
 		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
+
+		draw_custom  if (defined? draw_custom)
 	end
 end
 

@@ -34,6 +34,8 @@ class Game < Gosu::Window
 		#@player = Player.new x: @room.w / 2, y: @room.h / 2
 		@player = Player.new spawn: @room.get_spawn
 
+		@entities = [@player, Enemy.new]
+
 		## Move camera to player
 		$camera.center_on x: @player.x, y: @player.y
 	end
@@ -131,8 +133,8 @@ class Game < Gosu::Window
 
 		#@player.move dirs, sneak, 6  unless (dirs.empty?)
 
-		# Update player
-		@player.update           #if ($update_counter % 4 == 0)
+		# Update entities (and player)
+		@entities.each &:update           #if ($update_counter % 4 == 0)
 
 		# Update room
 		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)
@@ -150,8 +152,8 @@ class Game < Gosu::Window
 		# Draw background
 		Gosu.draw_rect @x,@y, @w,@h, $settings.colors(:gray_darker), @z
 
-		# Draw player
-		@player.draw
+		# Draw entities (and player)
+		@entities.each &:draw
 
 		# Draw room
 		@room.draw  unless (@room.nil?)

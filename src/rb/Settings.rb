@@ -27,10 +27,30 @@ class Settings
 				h: 640
 			},
 
+			entities: {
+				size: {
+					w: 32,
+					h: 32
+				},
+				max_vel: {
+					x: 6,
+					y: 6
+				},
+				vel_incr: {
+					x: 1,
+					y: 1
+				},
+				vel_decr: {
+					x: 4,
+					y: 4
+				},
+				move_interval:     4
+			},
+
 			player: {
 				size: {
-					w: 16,
-					h: 16
+					w: 32,
+					h: 32
 				},
 				step:              1,
 				step_sneak:        0.4,    # times velocity
@@ -71,6 +91,7 @@ class Settings
 				gray_dark:    Gosu::Color.argb(0xff_8c8c8c),
 				gray_darker:  Gosu::Color.argb(0xff_5d5d5d),
 				red:          Gosu::Color.argb(0xff_8e452e),
+				green:        Gosu::Color.argb(0xff_80ff73),
 				green_light:  Gosu::Color.argb(0xff_daedbd),
 				green_dark:   Gosu::Color.argb(0xff_adbc96),
 				blue:         Gosu::Color.argb(0xff_7dbbc3),
@@ -94,6 +115,15 @@ class Settings
 			return @settings[:player][:size][target]
 		else
 			return @settings[:player][target]
+		end
+	end
+
+	def entities target
+		case target
+		when :w, :h
+			return @settings[:entities][:size][target]
+		else
+			return @settings[:entities][target]
 		end
 	end
 

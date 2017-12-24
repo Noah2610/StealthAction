@@ -52,6 +52,13 @@ class Room
 		end .reject { |v| v.nil? || !v.check_collision? }
 	end
 
+	def find_instances_by_class klass
+		return  unless (klass.is_a? Class)
+		return @instances.map do |instance|
+			next instance  if (instance.is_a? klass)
+		end .reject { |v| v.nil?  }
+	end
+
 	def draw_pos axis
 		case axis
 		when :x
