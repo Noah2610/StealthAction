@@ -43,7 +43,7 @@ class Entity
 		}
 	end
 
-	def collision? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, target: :solid
+	def collision? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, customs: [], target: :solid
 		case target
 		## Default wall collision checking, solid instances
 		when :solid
@@ -166,13 +166,22 @@ class Entity
 			collisions.each { |c| c.yes_collision self }
 			return collisions
 
-		## Check doors - TODO deprecated, using passable collision checking for doors ^
-		when :door, :doors
-			collisions = []
-			$game.room.get_instances(:doors).each do |instance|
 
-				inst = set_inst instance
-				smaller = check_smaller instance
+		## Check custom instances (x, y, w, h)
+		when :custom
+			collisions = []
+			customs.each do |instance|
+
+				inst = {
+					x:  instance[:x],
+					x2: (instance[:x] + instance[:w]),
+					y:  instance[:y],
+					y2: (instance[:y] + instance[:h])
+				}
+				smaller = {
+					w: (@w.to_f / instance[:w].to_f).ceil,
+					h: (@h.to_f / instance[:h].to_f).ceil
+				}
 
 				if (smaller[:w] > 1)
 					if (@x < inst[:x] && (@x + @w) > inst[:x2])
@@ -195,15 +204,12 @@ class Entity
 							((x) >= inst[:x])        ) ||
 						 (((x + w) <= inst[:x2])     &&
 							((x + w) >= inst[:x])   ))  )
-					instance.is_inside!
 					collisions << instance
-				else
-					instance.is_outside!
 				end
-
 			end
 
 			return collisions
+
 		end
 
 		return false
