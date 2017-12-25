@@ -43,7 +43,140 @@ class Entity
 		}
 	end
 
-	def collision? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, target: :solid
+	def collision? args
+		to_check = args[:check] || []
+		dir = args[:dir] || nil
+		x = args[:x] || @x.dup
+		y = args[:y] || @y.dup
+		w = args[:w] || @w.dup
+		h = args[:h] || @h.dup
+
+		## Moving (solid instances)
+		if (dir)
+			collision = false
+			to_check.each do |instance|
+				inst = set_inst instance
+				smaller = check_smaller instance
+
+				case dir
+				when :up
+					if (smaller[:w] > 1)
+						if (@x < inst[:x] && (@x + @w) > inst[:x2])
+							inst[:x] -= @w
+							inst[:x2] += @w
+						end
+					end
+
+					if (  ((y) <= inst[:y2])        &&
+								((y) > inst[:y])          &&
+							((((x) < inst[:x2])         &&
+								((x) >= inst[:x])       ) ||
+							 (((x + w) <= inst[:x2])    &&
+								((x + w) > inst[:x])    ) ))
+						collision = instance
+						break
+					end
+				when :down
+					if (smaller[:w] > 1)
+						if (@x < inst[:x] && (@x + @w) > inst[:x2])
+							inst[:x] -= @w
+							inst[:x2] += @w
+						end
+					end
+
+					if (  ((y + h) < inst[:y2])     &&
+								((y + h) >= inst[:y])     &&
+							((((x) < inst[:x2])         &&
+								((x) >= inst[:x])       ) ||
+							 (((x + w) <= inst[:x2])    &&
+								((x + w) > inst[:x])    ) ))
+						collision = instance
+						break
+					end
+				when :left
+					if (smaller[:h] > 1)
+						if (@y < inst[:y] && (@y + @h) > inst[:y2])
+							inst[:y] -= @h
+							inst[:y2] += @h
+						end
+					end
+
+					if (  ((x) <= inst[:x2])        &&
+								((x) > inst[:x])          &&
+							((((y) < inst[:y2])         &&
+								((y) >= inst[:y])       ) ||
+							 (((y + h) <= inst[:y2])    &&
+								((y + h) > inst[:y])    ) ))
+						collision = instance
+						break
+					end
+				when :right
+					if (smaller[:h] > 1)
+						if (@y < inst[:y] && (@y + @h) > inst[:y2])
+							inst[:y] -= @h
+							inst[:y2] += @h
+						end
+					end
+
+					if (  ((x + w) < inst[:x2])     &&
+								((x + w) >= inst[:x])     &&
+							((((y) < inst[:y2])         &&
+								((y) >= inst[:y])       ) ||
+							 (((y + h) <= inst[:y2])    &&
+								((y + h) > inst[:y])    ) ))
+						collision = instance
+						break
+					end
+				end
+			end
+
+			collision.yes_collision self  if (collision)
+			return collision
+
+		## Not moving, (passable instances)
+		else
+			collisions = []
+			$game.room.passable_instances.each do |instance|
+
+				inst = set_inst instance
+				smaller = check_smaller instance
+
+				if (smaller[:w] > 1)
+					if (@x < inst[:x] && (@x + @w) > inst[:x2])
+						inst[:x] -= @w
+						inst[:x2] += @w
+					end
+				end
+				if (smaller[:h] > 1)
+					if (@y < inst[:y] && (@y + @h) > inst[:y2])
+						inst[:y] -= @h
+						inst[:y2] += @h
+					end
+				end
+
+				if (((((y) <= inst[:y2])         &&
+							((y) >= inst[:y])        ) ||
+						 (((y + h) <= inst[:y2])     &&
+						  ((y + h) >= inst[:y])   )) &&
+						((((x) <= inst[:x2])         &&
+							((x) >= inst[:x])        ) ||
+						 (((x + w) <= inst[:x2])     &&
+							((x + w) >= inst[:x])   ))  )
+					collisions << instance
+				else
+					instance.no_collision self
+				end
+			end
+
+			#collisions.each &:yes_collision
+			collisions.each { |c| c.yes_collision self }
+			return collisions
+
+
+		end
+	end
+
+	def collision_old? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, target: :solid
 		case target
 		## Default wall collision checking, solid instances
 		when :solid
@@ -166,44 +299,6 @@ class Entity
 			collisions.each { |c| c.yes_collision self }
 			return collisions
 
-		## Check doors - TODO deprecated, using passable collision checking for doors ^
-		when :door, :doors
-			collisions = []
-			$game.room.get_instances(:doors).each do |instance|
-
-				inst = set_inst instance
-				smaller = check_smaller instance
-
-				if (smaller[:w] > 1)
-					if (@x < inst[:x] && (@x + @w) > inst[:x2])
-						inst[:x] -= @w
-						inst[:x2] += @w
-					end
-				end
-				if (smaller[:h] > 1)
-					if (@y < inst[:y] && (@y + @h) > inst[:y2])
-						inst[:y] -= @h
-						inst[:y2] += @h
-					end
-				end
-
-				if (((((y) <= inst[:y2])         &&
-							((y) >= inst[:y])        ) ||
-						 (((y + h) <= inst[:y2])     &&
-						  ((y + h) >= inst[:y])   )) &&
-						((((x) <= inst[:x2])         &&
-							((x) >= inst[:x])        ) ||
-						 (((x + w) <= inst[:x2])     &&
-							((x + w) >= inst[:x])   ))  )
-					instance.is_inside!
-					collisions << instance
-				else
-					instance.is_outside!
-				end
-
-			end
-
-			return collisions
 		end
 
 		return false
@@ -218,7 +313,8 @@ class Entity
 
 		## Check if player collides with any door
 
-		collision? target: :passable  if (@check_collision)
+		#collision? target: :passable  if (@check_collision)
+		collision? check: $game.room.get_instances(:passable)  if (@check_collision)
 
 		moved_in = { x: false, y: false }
 		max_speed = vel.map { |a,s| next s.abs } .max
@@ -242,7 +338,7 @@ class Entity
 				end
 
 				moved_in_tmp = false
-				coll = @check_collision ? collision?(dir) : false
+				coll = @check_collision ? collision?(dir: dir, check: $game.room.get_instances(:solid)) : false
 				case axis
 				when :x
 					unless (coll)
@@ -278,17 +374,23 @@ class Entity
 							case dir
 							when :up, :down
 								if    ( !collision?(
-												 dir,
-												 @x + n, @y,
-												 @w, @h) )
+												 check: $game.room.get_instances(:solid),
+												 dir: dir,
+												 x: (@x + n),
+												 y: @y,
+												 w: @w,
+												 h: @h) )
 									@x += n
 									$camera.move :right, n  if (@camera_follows)
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 dir,
-												 @x - n, @y,
-												 @w, @h) )
+												 check: $game.room.get_instances(:solid),
+												 dir: dir,
+												 x: (@x - n),
+												 y: @y,
+												 w: @w,
+												 h: @h) )
 									@x -= n
 									$camera.move :left, n   if (@camera_follows)
 									collision_padded = true
@@ -297,17 +399,23 @@ class Entity
 
 							when :left, :right
 								if    ( !collision?(
-												 dir,
-												 @x, @y + n,
-												 @w, @h) )
+												 check: $game.room.get_instances(:solid),
+												 dir: dir,
+												 x: @x,
+												 y: (@y + n),
+												 w: @w,
+												 h: @h) )
 									@y += n
 									$camera.move :down, n   if (@camera_follows)
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 dir,
-												 @x, @y - n,
-												 @w, @h) )
+												 check: $game.room.get_instances(:solid),
+												 dir: dir,
+												 x: @x,
+												 y: (@y - n),
+												 w: @w,
+												 h: @h) )
 									@y -= n
 									$camera.move :up, n     if (@camera_follows)
 									collision_padded = true
