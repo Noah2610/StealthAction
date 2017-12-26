@@ -5,6 +5,8 @@ class Enemy < Entity
 		@c = $settings.colors :green
 		@cur_dirs = [[:up,:down,:left,:right].sample]
 		@update_counter_custom = 0
+
+		@image = $settings.images :s_dev_worm
 	end
 
 	def ch_dirs

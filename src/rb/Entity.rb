@@ -241,13 +241,14 @@ class Entity
 
 				if (coll && @collision_padding)
 					collision_padded = false
+					to_check = $game.room.get_instances(:solid)
 					# Slide into hole - collision_padding
 					if (@vel.map { |k,v| v.abs > 0 } .count(true) == 1)
 						@collision_padding.times do |n|
 							case dir
 							when :up, :down
 								if    ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: (@x + n),
 												 y: @y,
@@ -258,7 +259,7 @@ class Entity
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: (@x - n),
 												 y: @y,
@@ -272,7 +273,7 @@ class Entity
 
 							when :left, :right
 								if    ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: @x,
 												 y: (@y + n),
@@ -283,7 +284,7 @@ class Entity
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: @x,
 												 y: (@y - n),
