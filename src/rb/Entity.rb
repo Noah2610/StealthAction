@@ -8,6 +8,8 @@ class Entity
 		@w = args[:w] || $settings.entities(:w)
 		@h = args[:h] || $settings.entities(:h)
 
+		@image = nil
+
 		@z = 30
 		@c = $settings.colors(:gray)
 
@@ -524,9 +526,22 @@ class Entity
 		end
 	end
 
+	def draw_scale
+		return 1  if (@image.nil?)
+		return {
+			x: (@w.to_f / @image.width.to_f),
+			y: (@h.to_f / @image.height.to_f)
+		}
+	end
+
 	def draw
 		# Draw entity
-		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
+		if (@image)
+			scale = draw_scale
+			@image.draw draw_pos(:x), draw_pos(:y), @z, scale[:x],scale[:y]
+		elsif (@image.nil?)
+			Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
+		end
 
 		draw_custom  if (defined? draw_custom)
 	end

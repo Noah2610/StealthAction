@@ -16,7 +16,8 @@ DIR = {
 	rooms:      File.join(ROOT, 'src/rb/Rooms'),
 	instances:  File.join(ROOT, 'src/rb/Instances'),
 	entities:   File.join(ROOT, 'src/rb/Entities'),
-	levels:     File.join(ROOT, 'src/levels')
+	levels:     File.join(ROOT, 'src/levels'),
+	images:     File.join(ROOT, 'src/images')
 }
 
 require File.join DIR[:rb], 'methods'
