@@ -119,7 +119,7 @@ class Enemy < Entity
 		x = @x + (@w.to_f / 2.0).round
 		y = @y + (@h.to_f / 2.0).round
 
-		coll = collision?(nil, x, y, 2,2, target: :custom, customs: @grid).first
+		coll = collision?(x: x, y: y, w: 2, h: 2, check: @grid).first
 		@adjacent = pathfind_get_adjacent grid: @grid, cell: coll
 
 		cell_vals = pathfind_calc_values cells: @adjacent, cell_cur: coll, cell_goal: cell_goal
