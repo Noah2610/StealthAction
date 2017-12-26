@@ -138,134 +138,7 @@ class Entity
 		## Not moving, (passable instances)
 		else
 			collisions = []
-			$game.room.passable_instances.each do |instance|
-
-				inst = set_inst instance
-				smaller = check_smaller instance
-
-				if (smaller[:w] > 1)
-					if (@x < inst[:x] && (@x + @w) > inst[:x2])
-						inst[:x] -= @w
-						inst[:x2] += @w
-					end
-				end
-				if (smaller[:h] > 1)
-					if (@y < inst[:y] && (@y + @h) > inst[:y2])
-						inst[:y] -= @h
-						inst[:y2] += @h
-					end
-				end
-
-				if (((((y) <= inst[:y2])         &&
-							((y) >= inst[:y])        ) ||
-						 (((y + h) <= inst[:y2])     &&
-						  ((y + h) >= inst[:y])   )) &&
-						((((x) <= inst[:x2])         &&
-							((x) >= inst[:x])        ) ||
-						 (((x + w) <= inst[:x2])     &&
-							((x + w) >= inst[:x])   ))  )
-					collisions << instance
-				else
-					instance.no_collision self
-				end
-			end
-
-			#collisions.each &:yes_collision
-			collisions.each { |c| c.yes_collision self }
-			return collisions
-
-
-		end
-	end
-
-	def collision_old? dir = nil, x = @x.dup, y = @y.dup, w = @w.dup, h = @h.dup, target: :solid
-		case target
-		## Default wall collision checking, solid instances
-		when :solid
-			collision = false
-			$game.room.solid_instances.each do |instance|
-				inst = set_inst instance
-				smaller = check_smaller instance
-
-				case dir
-				when :up
-					if (smaller[:w] > 1)
-						if (@x < inst[:x] && (@x + @w) > inst[:x2])
-							inst[:x] -= @w
-							inst[:x2] += @w
-						end
-					end
-
-					if (  ((y) <= inst[:y2])        &&
-								((y) > inst[:y])          &&
-							((((x) < inst[:x2])         &&
-								((x) >= inst[:x])       ) ||
-							 (((x + w) <= inst[:x2])    &&
-								((x + w) > inst[:x])    ) ))
-						collision = instance
-						break
-					end
-				when :down
-					if (smaller[:w] > 1)
-						if (@x < inst[:x] && (@x + @w) > inst[:x2])
-							inst[:x] -= @w
-							inst[:x2] += @w
-						end
-					end
-
-					if (  ((y + h) < inst[:y2])     &&
-								((y + h) >= inst[:y])     &&
-							((((x) < inst[:x2])         &&
-								((x) >= inst[:x])       ) ||
-							 (((x + w) <= inst[:x2])    &&
-								((x + w) > inst[:x])    ) ))
-						collision = instance
-						break
-					end
-				when :left
-					if (smaller[:h] > 1)
-						if (@y < inst[:y] && (@y + @h) > inst[:y2])
-							inst[:y] -= @h
-							inst[:y2] += @h
-						end
-					end
-
-					if (  ((x) <= inst[:x2])        &&
-								((x) > inst[:x])          &&
-							((((y) < inst[:y2])         &&
-								((y) >= inst[:y])       ) ||
-							 (((y + h) <= inst[:y2])    &&
-								((y + h) > inst[:y])    ) ))
-						collision = instance
-						break
-					end
-				when :right
-					if (smaller[:h] > 1)
-						if (@y < inst[:y] && (@y + @h) > inst[:y2])
-							inst[:y] -= @h
-							inst[:y2] += @h
-						end
-					end
-
-					if (  ((x + w) < inst[:x2])     &&
-								((x + w) >= inst[:x])     &&
-							((((y) < inst[:y2])         &&
-								((y) >= inst[:y])       ) ||
-							 (((y + h) <= inst[:y2])    &&
-								((y + h) > inst[:y])    ) ))
-						collision = instance
-						break
-					end
-				end
-			end
-
-			collision.yes_collision self  if (collision)
-			return collision
-
-		## Check passable, non-solid instances only
-		when :passable, :not_solid
-			collisions = []
-			$game.room.passable_instances.each do |instance|
+			to_check.each do |instance|
 
 				inst = set_inst instance
 				smaller = check_smaller instance
@@ -302,11 +175,9 @@ class Entity
 			return collisions
 
 		end
-
-		return false
 	end
 
-	#def move dirs, sneak = false, step = { x: vel[:x].abs, y: vel[:y].abs }
+
 	def move sneak = false, vel = { x: @vel[:x], y: @vel[:y] }
 		vel = vel.map do |axis,speed|
 			next [axis, speed * @step_sneak]
