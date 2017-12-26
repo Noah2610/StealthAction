@@ -81,7 +81,7 @@ class Settings
 			},
 
 			images: {
-				valid_formats: ["jpg","jpeg"]
+				valid_formats: ["png"]
 			}
 		}
 
