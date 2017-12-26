@@ -78,6 +78,10 @@ class Settings
 
 			camera: {
 				step:  2
+			},
+
+			images: {
+				valid_formats: ["jpg","jpeg"]
 			}
 		}
 
@@ -102,8 +106,18 @@ class Settings
 				brown:        Gosu::Color.argb(0xff_695a3b)
 			}
 		}
+
+		@resources[:images] = load_images DIR[:images], valid_formats: valid_image_formats
 	end
 
+
+	def images target
+		return @resources[:images][target]
+	end
+
+	def valid_image_formats
+		return @settings[:images][:valid_formats]
+	end
 
 	def controls target
 		return @controls[target]

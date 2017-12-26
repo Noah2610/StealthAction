@@ -32,3 +32,18 @@ rescue NameError
 	return false
 end
 
+## Load all images
+def load_images dir = DIR[:images], args = {}
+	return nil  unless (File.directory? dir)
+	valid_formats = args[:valid_formats]
+	images = Dir.new(dir).map do |file|
+		next nil  if (file =~ /\A\.{1,2}\z/)
+		name = file.match(/(\A.+)\./)[1].to_sym
+		ext = file.match(/\.(.+\z)/)[1].downcase
+		next nil  unless (valid_formats.include? ext)
+		fullpath = File.join dir, file
+		next [name, Gosu::Image.new(fullpath, retro: true)]
+	end .reject { |v| v.nil? } .to_h
+	return images
+end
+
