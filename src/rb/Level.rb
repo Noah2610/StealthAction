@@ -10,6 +10,7 @@ class Level
 		else
 			@rooms = nil
 		end
+		handle_config @config  if (@config)
 	end
 
 	def get_room name
@@ -52,6 +53,13 @@ class Level
 			end
 		end
 		return instances
+	end
+
+	def handle_config yaml
+		## Play song
+		if (yaml["song"])
+			$game.song.play yaml["song"].to_sym
+		end
 	end
 
 end

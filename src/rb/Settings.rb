@@ -82,6 +82,10 @@ class Settings
 
 			images: {
 				valid_formats: ["png"]
+			},
+
+			songs: {
+				valid_formats: ["wav"]
 			}
 		}
 
@@ -104,7 +108,10 @@ class Settings
 				orange:       Gosu::Color.argb(0xff_e5b181),
 				yellow:       Gosu::Color.argb(0xff_ebee8c),
 				brown:        Gosu::Color.argb(0xff_695a3b)
-			}
+			},
+			images:  {},
+			songs:   {},
+			samples: {}
 		}
 
 		@resources[:images] = load_images DIR[:images], valid_formats: valid_image_formats
@@ -113,6 +120,12 @@ class Settings
 
 	def images target
 		return @resources[:images][target]
+	end
+
+	def songs target
+		return @resources[:songs][target]  unless (@resources[:songs][target].nil?)
+		@resources[:songs][target] = load_song target, DIR[:songs], valid_formats: @settings[:songs][:valid_formats]
+		return @resources[:songs][target]
 	end
 
 	def valid_image_formats

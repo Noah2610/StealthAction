@@ -47,3 +47,19 @@ def load_images dir = DIR[:images], args = {}
 	return images
 end
 
+## Load specific song
+def load_song target, dir = DIR[:songs], args = {}
+	target = target.to_sym
+	valid_formats = args[:valid_formats]
+	Dir.new(dir).each do |file|
+		next  if (file =~ /\A\.{1,2}\z/)
+		name = file.match(/(\A.+)\./)[1].to_sym
+		ext = file.match(/\.(.+\z)/)[1].downcase
+		fullpath = File.join dir, file
+		if (valid_formats.include?(ext) && target == name)
+			return Gosu::Song.new fullpath
+		end
+	end
+	return nil
+end
+

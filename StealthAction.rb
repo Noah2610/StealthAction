@@ -17,11 +17,14 @@ DIR = {
 	instances:  File.join(ROOT, 'src/rb/Instances'),
 	entities:   File.join(ROOT, 'src/rb/Entities'),
 	levels:     File.join(ROOT, 'src/levels'),
-	images:     File.join(ROOT, 'src/images')
+	images:     File.join(ROOT, 'src/images'),
+	songs:      File.join(ROOT, 'src/songs'),
+	samples:    File.join(ROOT, 'src/samples')
 }
 
 require File.join DIR[:rb], 'methods'
 require File.join DIR[:rb], 'Settings'
+require File.join DIR[:rb], 'SongController'
 require File.join DIR[:rb], 'Instance'
 require File.join DIR[:rb], 'Room'
 require File.join DIR[:rb], 'Entity'
