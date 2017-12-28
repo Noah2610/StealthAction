@@ -6,6 +6,8 @@ class Enemy < Entity
 		@cur_dirs = [[:up,:down,:left,:right].sample]
 		@update_counter_custom = 0
 
+		@image = $settings.images :s_dev_worm
+
 		pathfind_init
 	end
 

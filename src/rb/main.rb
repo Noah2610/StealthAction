@@ -1,6 +1,6 @@
 
 class Game < Gosu::Window
-	attr_reader :room, :player, :entities
+	attr_reader :room, :player, :entities, :song
 
 	def initialize
 		@x = @y = 0
@@ -18,6 +18,9 @@ class Game < Gosu::Window
 
 	### Initialize all game objects, after $game has been set
 	def init
+		## Song controller
+		@song = SongController.new
+
 		## Preload all levels
 		#@levels = load_levels DIR[:levels]
 

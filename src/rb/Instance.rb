@@ -10,6 +10,8 @@ class Instance
 		@w = args[:w] || 16
 		@h = args[:h] || 16
 
+		@image = nil
+
 		# Defaults
 		@z = 20
 		@bg = $settings.instances :bg
@@ -63,6 +65,16 @@ class Instance
 		end
 	end
 
+	def yes_collision with = nil
+	end
+	def no_collision with = nil
+	end
+
+	def update
+		# Custom update function of child class
+		update_custom  if (defined? update_custom)
+	end
+
 	def draw_pos axis
 		case axis
 		when :x
@@ -74,18 +86,22 @@ class Instance
 		end
 	end
 
-	def yes_collision with = nil
-	end
-	def no_collision with = nil
-	end
-
-	def update
-		# Custom update function of child class
-		update_custom  if (defined? update_custom)
+	def draw_scale
+		return 1  if (@image.nil?)
+		return {
+			x: (@w.to_f / @image.width.to_f),
+			y: (@h.to_f / @image.height.to_f)
+		}
 	end
 
 	def draw
-		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @bg, @z
+		# Draw instance
+		if (@image)
+			scale = draw_scale
+			@image.draw draw_pos(:x), draw_pos(:y), @z, scale[:x],scale[:y]
+		elsif (@image.nil?)
+			Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @bg, @z
+		end
 
 		# Custom draw function of child class
 		draw_custom  if (defined? draw_custom)

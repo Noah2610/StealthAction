@@ -8,6 +8,8 @@ class Entity
 		@w = args[:w] || $settings.entities(:w)
 		@h = args[:h] || $settings.entities(:h)
 
+		@image = nil
+
 		@z = 30
 		@c = $settings.colors(:gray)
 
@@ -136,7 +138,7 @@ class Entity
 		## Not moving, (passable instances)
 		else
 			collisions = []
-			$game.room.passable_instances.each do |instance|
+			to_check.each do |instance|
 
 				inst = set_inst instance
 				smaller = check_smaller instance
@@ -175,7 +177,6 @@ class Entity
 		end
 	end
 
-	#def move dirs, sneak = false, step = { x: vel[:x].abs, y: vel[:y].abs }
 	def move sneak = false, vel = { x: @vel[:x], y: @vel[:y] }
 		vel = vel.map do |axis,speed|
 			next [axis, speed * @step_sneak]
@@ -239,13 +240,14 @@ class Entity
 
 				if (coll && @collision_padding)
 					collision_padded = false
+					to_check = $game.room.get_instances(:solid)
 					# Slide into hole - collision_padding
 					if (@vel.map { |k,v| v.abs > 0 } .count(true) == 1)
 						@collision_padding.times do |n|
 							case dir
 							when :up, :down
 								if    ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: (@x + n),
 												 y: @y,
@@ -256,7 +258,7 @@ class Entity
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: (@x - n),
 												 y: @y,
@@ -270,7 +272,7 @@ class Entity
 
 							when :left, :right
 								if    ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: @x,
 												 y: (@y + n),
@@ -281,7 +283,7 @@ class Entity
 									collision_padded = true
 									break
 								elsif ( !collision?(
-												 check: $game.room.get_instances(:solid),
+												 check: to_check,
 												 dir: dir,
 												 x: @x,
 												 y: (@y - n),
@@ -395,9 +397,22 @@ class Entity
 		end
 	end
 
+	def draw_scale
+		return 1  if (@image.nil?)
+		return {
+			x: (@w.to_f / @image.width.to_f),
+			y: (@h.to_f / @image.height.to_f)
+		}
+	end
+
 	def draw
 		# Draw entity
-		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
+		if (@image)
+			scale = draw_scale
+			@image.draw draw_pos(:x), draw_pos(:y), @z, scale[:x],scale[:y]
+		elsif (@image.nil?)
+			Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @c, @z
+		end
 
 		draw_custom  if (defined? draw_custom)
 	end
