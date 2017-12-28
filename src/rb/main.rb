@@ -1,6 +1,6 @@
 
 class Game < Gosu::Window
-	attr_reader :room, :player, :entities, :song
+	attr_reader :room, :player, :entities, :song, :pathfind
 
 	def initialize
 		@x = @y = 0
@@ -18,33 +18,38 @@ class Game < Gosu::Window
 
 	### Initialize all game objects, after $game has been set
 	def init
+		## Pathfind
+		@pathfind = Pathfind.new
+
+		## Add player
+		@player = Player.new #spawn: @room.get_spawn
+
 		## Song controller
 		@song = SongController.new
 
-		## Preload all levels
-		#@levels = load_levels DIR[:levels]
-
 		## Only load one level
-		@level = load_level @level_name
+		switch_level @level_name
 
 		#@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
-		@room = @level.get_room(@room_name)
+		switch_room @room_name
 
 		puts "Level: #{@level.name}"
 		puts "  Room: #{@room.name}"
 
-		## Add player
-		#@player = Player.new x: @room.w / 2, y: @room.h / 2
-		@player = Player.new spawn: @room.get_spawn
+		## Init Pathfinder
+		@pathfind.pathfind_init
 
 		@entities = [
 			@player,
-			Enemy.new, Enemy.new, Enemy.new,
-			Enemy.new, Enemy.new, Enemy.new
+			Enemy.new,
+			Tracker.new
 		]
 
 		## Move camera to player
-		$camera.center_on x: @player.x, y: @player.y
+		$camera.center_on x: @player.pos(:x), y: @player.pos(:y)
+
+		## Font for FPS display
+		@font_fps = Gosu::Font.new 32
 	end
 
 	def load_level name = :sample, dir = DIR[:levels]
@@ -90,15 +95,27 @@ class Game < Gosu::Window
 		end .reject { |v| v.nil? } .sample
 	end
 
+	def switch_level name = :sample
+		@level = load_level name
+	end
+
+	def switch_room name = :sample
+		@room = @level.get_room name
+		@player.move_to_spawn @room.get_spawn
+		if (pathfinder)
+			pathfinder.reset
+			pathfinder.add_solids @room.get_instances(:solid)
+		end
+	end
+
 	def button_down id
 		close  if ($settings.controls(:close).include? id)
 
 		# New random room
 		unless (@level.nil?)
 			if ($settings.controls(:random_room).include? id)
-				@level = load_level :sample
-				@room = @level.get_room :sample
-				@player.move_to_spawn @room.get_spawn
+				switch_level
+				switch_room
 				puts "Level: #{@level.name}"
 				puts "  Room: #{@room.name}"
 			end
@@ -164,6 +181,12 @@ class Game < Gosu::Window
 
 		# Draw room
 		@room.draw  unless (@room.nil?)
+
+		# Draw pathfind grid
+		@pathfind.draw
+
+		# Draw FPS display
+		@font_fps.draw Gosu.fps.to_s, 64,64,100, 1,1, $settings.colors(:light_red)
 	end
 end
 

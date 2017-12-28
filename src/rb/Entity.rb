@@ -1,7 +1,5 @@
 
 class Entity
-	attr_reader :x,:y
-
 	def initialize args = {}
 		@x = args[:x] || 0
 		@y = args[:y] || 0
@@ -27,6 +25,20 @@ class Entity
 		@solid = true
 
 		init args  if (defined? init)
+	end
+
+	def pos axis = :all
+		case axis
+		when :all
+			return {
+				x: @x,
+				y: @y
+			}
+		when :x
+			return @x
+		when :y
+			return @y
+		end
 	end
 
 	def set_inst instance

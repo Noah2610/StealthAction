@@ -23,6 +23,7 @@ require File.join DIR[:rb], 'Settings'
 require File.join DIR[:rb], 'SongController'
 require File.join DIR[:rb], 'Instance'
 require File.join DIR[:rb], 'Room'
+require File.join DIR[:rb], 'Pathfind'
 require File.join DIR[:rb], 'Entity'
 require_files DIR[:rooms]
 require_files DIR[:instances]

@@ -99,6 +99,7 @@ class Settings
 				gray_dark:    Gosu::Color.argb(0xff_8c8c8c),
 				gray_darker:  Gosu::Color.argb(0xff_5d5d5d),
 				red:          Gosu::Color.argb(0xff_8e452e),
+				light_red:    Gosu::Color.argb(0xff_ff0000),
 				green:        Gosu::Color.argb(0xff_80ff73),
 				green_light:  Gosu::Color.argb(0xff_daedbd),
 				green_dark:   Gosu::Color.argb(0xff_adbc96),

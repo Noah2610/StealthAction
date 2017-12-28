@@ -3,6 +3,7 @@ class SongController
 	def initialize args = {}
 		@song = nil
 		play args[:song]      unless (args[:song].nil?)
+		@volume_default = args[:volume] || 0.05
 	end
 
 	def play target = nil, args = {}
@@ -16,6 +17,7 @@ class SongController
 			@song = $settings.songs target
 			@song.play looping
 		end
+		self.volume = @volume_default
 	end
 
 	def pause

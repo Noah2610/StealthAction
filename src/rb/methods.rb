@@ -63,3 +63,21 @@ def load_song target, dir = DIR[:songs], args = {}
 	return nil
 end
 
+## Return current room
+def current_room
+	return $game.room      unless ($game.nil?)
+	return nil
+end
+
+## Return Player
+def player
+	return $game.player    unless ($game.nil?)
+	return nil
+end
+
+## Return Pathfind instance
+def pathfinder
+	return $game.pathfind  unless ($game.nil?)
+	return nil
+end
+
