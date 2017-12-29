@@ -1,6 +1,6 @@
 
 class Game < Gosu::Window
-	attr_reader :room, :player, :entities, :song, :pathfind
+	attr_reader :room, :player, :entities, :song
 
 	def initialize
 		@x = @y = 0
@@ -9,7 +9,7 @@ class Game < Gosu::Window
 		@h = screen[:h]
 		@z = 0
 
-		@level_name = (ARGV[0] || :sample).to_sym
+		@level_name = (ARGV[0] || :dev).to_sym
 		@room_name = (ARGV[1] || :sample).to_sym
 
 		super @w, @h
@@ -19,7 +19,7 @@ class Game < Gosu::Window
 	### Initialize all game objects, after $game has been set
 	def init
 		## Pathfind
-		@pathfind = Pathfind.new
+		#@pathfind = Pathfind.new
 
 		## Add player
 		@player = Player.new #spawn: @room.get_spawn
@@ -38,14 +38,17 @@ class Game < Gosu::Window
 		puts "  Room: #{@room.name}"
 
 		## Init Pathfinder
-		@pathfind.pathfind_init
+		#@pathfind.pathfind_init
 		## Add Solid blocks to pathfind grid (bootstrap it)
-		@pathfind.add_solids @room.get_instances(:solid)
+		#@pathfind.add_solids @room.get_instances(:solid)
 
 		@entities = [
 			@player,
 			Enemy.new,
-			Tracker.new(x: 16, y: 16)
+			Tracker.new(x: 16, y: 16),
+			Tracker.new(x: 128, y: 128),
+			Tracker.new(x: 128, y: 32),
+			Tracker.new(x: 64, y: 256)
 		]
 
 		## Move camera to player
@@ -105,10 +108,13 @@ class Game < Gosu::Window
 	def switch_room name = :sample
 		@room = @level.get_room name
 		@player.move_to_spawn @room.get_spawn
+		@entities.each &:reset
+=begin
 		if (pathfinder)
 			pathfinder.reset
 			pathfinder.add_solids @room.get_instances(:solid)
 		end
+=end
 	end
 
 	def button_down id
@@ -186,7 +192,7 @@ class Game < Gosu::Window
 		@room.draw  unless (@room.nil?)
 
 		# Draw pathfind cells
-		@pathfind.draw
+		#@pathfind.draw
 
 		# Draw FPS display
 		@font_fps.draw Gosu.fps.to_s, 64,64,100, 1,1, $settings.colors(:red_light)

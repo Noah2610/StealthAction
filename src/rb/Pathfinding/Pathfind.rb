@@ -1,14 +1,16 @@
 
 class Pathfind
 	def initialize args = {}
-	end
-
-	def pathfind_init args = {}
-		cell_size = args[:cell_size] || {
+		@cell_size = args[:cell_size] || {
 			w: (args[:w] || 32),
 			h: (args[:h] || 32)
 		}
-		@grid = PathfindGrid.new cell_size: cell_size
+		pathfind_init args
+	end
+
+	def pathfind_init args = {}
+		@grid = PathfindGrid.new cell_size: @cell_size
+		add_solids current_room.get_instances(:solid)
 	end
 
 	def findpath args = {}
@@ -17,6 +19,7 @@ class Pathfind
 		return  if (entity.nil? || goal.nil?)
 		start_cell = @grid.find_cell by: :pos, x: (entity.pos(:x) + (entity.size(:w).to_f / 2.0).floor), y: (entity.pos(:y) + (entity.size(:h).to_f / 2.0).floor)
 		goal_cell = @grid.find_cell by: :pos, x: (goal.pos(:x) + (goal.size(:w).to_f / 2.0)), y: (goal.pos(:y) + (goal.size(:h).to_f / 2.0).floor)
+		return  if (start_cell.nil? || goal_cell.nil?)
 		if (goal_cell.is_solid?)
 			goal_cell = get_adjacent_cells(cell: goal_cell).map do |cell|
 				next cell  if (cell.passable?)
@@ -32,8 +35,8 @@ class Pathfind
 		while (open_set.size > 0)
 			cell = open_set.first
 			open_set.each do |open_cell|
-				#if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost && open_cell.h_cost < cell.h_cost))
-				if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost))
+				if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost && open_cell.h_cost < cell.h_cost))
+				#if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost))
 					cell = open_cell  if (open_cell.h_cost < cell.h_cost)
 				end
 			end
@@ -49,6 +52,7 @@ class Pathfind
 				return path
 			end
 
+			## Check adjacent cells and calculate
 			get_adjacent_cells(cell: cell).each do |adj|
 				next  if (adj.is_solid? || closed_set.include?(adj))
 
@@ -72,6 +76,7 @@ class Pathfind
 			path << current_cell
 			current_cell = current_cell.parent
 		end
+		#path << start_cell
 		return path.reverse
 	end
 
@@ -127,23 +132,6 @@ class Pathfind
 			}
 		end
 	end
-
-=begin
-	def findpath args = {}
-		return nil  if (args[:entity].nil? || args[:to].nil?)
-		entity = args[:entity]
-		to_x = args[:to][:x] || 512
-		to_y = args[:to][:y] || 512
-		cell_goal = find_cell by: :pos, grid: @grid, x: to_x, y: to_y
-		x = @x + (@w.to_f / 2.0).round
-		y = @y + (@h.to_f / 2.0).round
-
-		coll = collision?(x: x, y: y, w: 2, h: 2, check: @grid).first
-		@adjacent = get_adjacent_cells grid: @grid, cell: coll
-
-		cell_vals = calc_values cells: @adjacent, cell_cur: coll, cell_goal: cell_goal
-	end
-=end
 
 	def get_distance cell_a, cell_b
 		dist_x = (cell_a.index(:x) - cell_b.index(:x)).abs

@@ -44,7 +44,8 @@ class Settings
 					x: 4,
 					y: 4
 				},
-				move_interval:     4
+				move_interval:     4,
+				pathfind_interval: 60
 			},
 
 			player: {

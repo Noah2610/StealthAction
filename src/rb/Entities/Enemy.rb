@@ -4,7 +4,6 @@ class Enemy < Entity
 		@check_collision = true
 		@c = $settings.colors :green
 		@cur_dirs = [[:up,:down,:left,:right].sample]
-		@update_counter_custom = 0
 	end
 
 	def ch_dirs
@@ -32,11 +31,9 @@ class Enemy < Entity
 	end
 
 	def update_custom
-		ch_dirs  if (@update_counter_custom % 32 == 0)
+		ch_dirs  if ($update_counter % 32 == 0)
 
 		incr_vel @cur_dirs
-
-		@update_counter_custom += 1
 	end
 end
 

@@ -12,6 +12,8 @@ class Entity
 
 		@z = 30
 		@c = $settings.colors(:gray)
+		@move_interval = $settings.entities :move_interval
+		@pathfind_interval = $settings.entities :pathfind_interval
 
 		@vel = {
 			x: 0, y: 0
@@ -27,6 +29,10 @@ class Entity
 		@solid = true
 
 		init args  if (defined? init)
+	end
+
+	def reset
+		@pathfinder = Pathfind.new  unless (@pathfinder.nil?)
 	end
 
 	def pos axis = :all
@@ -70,7 +76,7 @@ class Entity
 		## Check if player collides with any door
 
 		#collision? target: :passable  if (@check_collision)
-		collision? check: $game.room.get_instances(:passable)  if (@check_collision)
+		collision? check: current_room.get_instances(:passable)  if (@check_collision)
 
 		moved_in = { x: false, y: false }
 		max_speed = vel.map { |a,s| next s.abs } .max
@@ -94,13 +100,16 @@ class Entity
 				end
 
 				moved_in_tmp = false
-				coll = @check_collision ? collision?(dir: dir, check: $game.room.get_instances(:solid)) : false
+				coll = @check_collision ? collision?(dir: dir, check: current_room.get_instances(:solid)) : false
 				case axis
 				when :x
 					unless (coll)
-						if ((@x + s.sign) < 0 || (@x + s.sign) > ($game.room.w - @w))
+=begin
+						# Don't move outside room
+						if ((@x + s.sign) < 0 || (@x + s.sign) > (current_room.w - @w))
 							return
 						end
+=end
 						@x += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:x]))
 						unless (moved_in[:x])
 							moved_in[:x] = true
@@ -110,9 +119,12 @@ class Entity
 					#@vel[:x] = @vel_incr[:x] * s.sign  if (coll)
 				when :y
 					unless (coll)
-						if ((@y + s.sign) < 0 || (@y + s.sign) > ($game.room.h - @h))
+=begin
+						# Don't move outside room
+						if ((@y + s.sign) < 0 || (@y + s.sign) > (current_room.h - @h))
 							return
 						end
+=end
 						@y += s.sign                 if (s.abs >= speed || (s.abs < speed && !moved_in[:y]))
 						unless (moved_in[:y])
 							moved_in[:y] = true
@@ -124,7 +136,7 @@ class Entity
 
 				if (coll && @collision_padding)
 					collision_padded = false
-					to_check = $game.room.get_instances(:solid)
+					to_check = current_room.get_instances(:solid)
 					# Slide into hole - collision_padding
 					if (@vel.map { |k,v| v.abs > 0 } .count(true) == 1)
 						@collision_padding.times do |n|

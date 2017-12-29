@@ -77,7 +77,7 @@ end
 
 ## Return Pathfind instance
 def pathfinder
-	return $game.pathfind  unless ($game.nil?)
 	return nil
+	return $game.pathfind  unless ($game.nil?)
 end
 

@@ -1,5 +1,6 @@
 
 class PathfindGrid
+	attr_reader :cells
 	def initialize args = {}
 		@cell_size = {
 			w: (args[:cell_size][:w] || 32),
