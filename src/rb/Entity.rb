@@ -1,5 +1,7 @@
 
 class Entity
+	include Collision
+
 	def initialize args = {}
 		@x = args[:x] || 0
 		@y = args[:y] || 0
@@ -34,158 +36,28 @@ class Entity
 				x: @x,
 				y: @y
 			}
-		when :x
+		when :x, :left
 			return @x
-		when :y
+		when :x2, :right
+			return @x + @w
+		when :y, :top
 			return @y
+		when :y2, :bottom
+			return @y + @h
 		end
 	end
 
-	def set_inst instance
-		return {
-			x:  instance.pos(:x),
-			x2: instance.pos(:x2),
-			y:  instance.pos(:y),
-			y2: instance.pos(:y2)
-		}
-	end
-
-	def check_smaller instance
-		return {
-			w: (@w.to_f / instance.w.to_f).ceil,
-			h: (@h.to_f / instance.h.to_f).ceil
-		}
-	end
-
-	def collision? args
-		to_check = args[:check] || []
-		dir = args[:dir] || nil
-		x = args[:x] || @x.dup
-		y = args[:y] || @y.dup
-		w = args[:w] || @w.dup
-		h = args[:h] || @h.dup
-
-		## Moving (solid instances)
-		if (dir)
-			collision = false
-			to_check.each do |instance|
-				inst = set_inst instance
-				smaller = check_smaller instance
-
-				case dir
-				when :up
-					if (smaller[:w] > 1)
-						if (@x < inst[:x] && (@x + @w) > inst[:x2])
-							inst[:x] -= @w
-							inst[:x2] += @w
-						end
-					end
-
-					if (  ((y) <= inst[:y2])        &&
-								((y) > inst[:y])          &&
-							((((x) < inst[:x2])         &&
-								((x) >= inst[:x])       ) ||
-							 (((x + w) <= inst[:x2])    &&
-								((x + w) > inst[:x])    ) ))
-						collision = instance
-						break
-					end
-				when :down
-					if (smaller[:w] > 1)
-						if (@x < inst[:x] && (@x + @w) > inst[:x2])
-							inst[:x] -= @w
-							inst[:x2] += @w
-						end
-					end
-
-					if (  ((y + h) < inst[:y2])     &&
-								((y + h) >= inst[:y])     &&
-							((((x) < inst[:x2])         &&
-								((x) >= inst[:x])       ) ||
-							 (((x + w) <= inst[:x2])    &&
-								((x + w) > inst[:x])    ) ))
-						collision = instance
-						break
-					end
-				when :left
-					if (smaller[:h] > 1)
-						if (@y < inst[:y] && (@y + @h) > inst[:y2])
-							inst[:y] -= @h
-							inst[:y2] += @h
-						end
-					end
-
-					if (  ((x) <= inst[:x2])        &&
-								((x) > inst[:x])          &&
-							((((y) < inst[:y2])         &&
-								((y) >= inst[:y])       ) ||
-							 (((y + h) <= inst[:y2])    &&
-								((y + h) > inst[:y])    ) ))
-						collision = instance
-						break
-					end
-				when :right
-					if (smaller[:h] > 1)
-						if (@y < inst[:y] && (@y + @h) > inst[:y2])
-							inst[:y] -= @h
-							inst[:y2] += @h
-						end
-					end
-
-					if (  ((x + w) < inst[:x2])     &&
-								((x + w) >= inst[:x])     &&
-							((((y) < inst[:y2])         &&
-								((y) >= inst[:y])       ) ||
-							 (((y + h) <= inst[:y2])    &&
-								((y + h) > inst[:y])    ) ))
-						collision = instance
-						break
-					end
-				end
-			end
-
-			collision.yes_collision self  if (collision)
-			return collision
-
-		## Not moving, (passable instances)
-		else
-			collisions = []
-			to_check.each do |instance|
-
-				inst = set_inst instance
-				smaller = check_smaller instance
-
-				if (smaller[:w] > 1)
-					if (@x < inst[:x] && (@x + @w) > inst[:x2])
-						inst[:x] -= @w
-						inst[:x2] += @w
-					end
-				end
-				if (smaller[:h] > 1)
-					if (@y < inst[:y] && (@y + @h) > inst[:y2])
-						inst[:y] -= @h
-						inst[:y2] += @h
-					end
-				end
-
-				if (((((y) <= inst[:y2])         &&
-							((y) >= inst[:y])        ) ||
-						 (((y + h) <= inst[:y2])     &&
-						  ((y + h) >= inst[:y])   )) &&
-						((((x) <= inst[:x2])         &&
-							((x) >= inst[:x])        ) ||
-						 (((x + w) <= inst[:x2])     &&
-							((x + w) >= inst[:x])   ))  )
-					collisions << instance
-				else
-					instance.no_collision self
-				end
-			end
-
-			#collisions.each &:yes_collision
-			collisions.each { |c| c.yes_collision self }
-			return collisions
-
+	def size side = :all
+		case side
+		when :all
+			return {
+				w: @w,
+				h: @h
+			}
+		when :w
+			return @w
+		when :h
+			return @h
 		end
 	end
 

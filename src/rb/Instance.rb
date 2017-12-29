@@ -1,6 +1,7 @@
 
 class Instance
 	attr_reader :w,:h
+	include Collision
 
 	def initialize args = {}
 		# Arguments
@@ -37,6 +38,20 @@ class Instance
 		end
 	end
 
+	def size side = :all
+		case side
+		when :all
+			return {
+				w: @w,
+				h: @h
+			}
+		when :w
+			return @w
+		when :h
+			return @h
+		end
+	end
+
 	def set_room room
 		@room = room
 	end
@@ -52,8 +67,13 @@ class Instance
 		return @check_collision
 	end
 
-	def pos axis
+	def pos axis = :all
 		case axis
+		when :all
+			return {
+				x: @x,
+				y: @y
+			}
 		when :x, :left
 			return @room.x + @x
 		when :x2, :right

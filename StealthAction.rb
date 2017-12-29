@@ -9,6 +9,7 @@ ROOT = File.dirname(File.absolute_path(__FILE__))
 
 DIR = {
 	rb:         File.join(ROOT, 'src/rb'),
+	modules:    File.join(ROOT, 'src/rb/Modules'),
 	rooms:      File.join(ROOT, 'src/rb/Rooms'),
 	instances:  File.join(ROOT, 'src/rb/Instances'),
 	entities:   File.join(ROOT, 'src/rb/Entities'),
@@ -19,11 +20,14 @@ DIR = {
 }
 
 require File.join DIR[:rb], 'methods'
+## Modules
+require_files DIR[:modules]
+## Classes
 require File.join DIR[:rb], 'Settings'
 require File.join DIR[:rb], 'SongController'
 require File.join DIR[:rb], 'Instance'
 require File.join DIR[:rb], 'Room'
-require File.join DIR[:rb], 'Pathfind'
+require_files File.join DIR[:rb], 'Pathfinding'
 require File.join DIR[:rb], 'Entity'
 require_files DIR[:rooms]
 require_files DIR[:instances]

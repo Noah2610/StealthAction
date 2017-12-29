@@ -1,6 +1,0 @@
-
-# YouTube:
-https://www.youtube.com/user/Cercopithecan/videos
-# Source Code:
-https://github.com/SebLague/Pathfinding
-

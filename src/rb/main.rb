@@ -28,21 +28,24 @@ class Game < Gosu::Window
 		@song = SongController.new
 
 		## Only load one level
-		switch_level @level_name
+		@level = load_level @level_name
 
 		#@room = @levels[@level_name].rooms.first  unless (@levels[:first].nil?)
-		switch_room @room_name
+		@room = @level.get_room @room_name
+		@player.move_to_spawn @room.get_spawn
 
 		puts "Level: #{@level.name}"
 		puts "  Room: #{@room.name}"
 
 		## Init Pathfinder
 		@pathfind.pathfind_init
+		## Add Solid blocks to pathfind grid (bootstrap it)
+		@pathfind.add_solids @room.get_instances(:solid)
 
 		@entities = [
 			@player,
 			Enemy.new,
-			Tracker.new
+			Tracker.new(x: 16, y: 16)
 		]
 
 		## Move camera to player
@@ -182,11 +185,11 @@ class Game < Gosu::Window
 		# Draw room
 		@room.draw  unless (@room.nil?)
 
-		# Draw pathfind grid
+		# Draw pathfind cells
 		@pathfind.draw
 
 		# Draw FPS display
-		@font_fps.draw Gosu.fps.to_s, 64,64,100, 1,1, $settings.colors(:light_red)
+		@font_fps.draw Gosu.fps.to_s, 64,64,100, 1,1, $settings.colors(:red_light)
 	end
 end
 
