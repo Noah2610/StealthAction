@@ -33,6 +33,12 @@ class Enemy < Entity
 	def update_custom
 		ch_dirs  if ($update_counter % 32 == 0)
 
+		# Decrease velocities
+		decr_axes = []
+		decr_axes << :x  unless (@cur_dirs.include?(:left) || @cur_dirs.include?(:right))
+		decr_axes << :y  unless (@cur_dirs.include?(:up) || @cur_dirs.include?(:down))
+		decr_vel decr_axes
+
 		incr_vel @cur_dirs
 	end
 end

@@ -78,8 +78,10 @@ class Tracker < Entity
 		## Find current or next cell
 		#cell = find_cell by: :pos, x: @x, y: @y, return_on_found: true
 		cell = find_closest_cell by: :pos, x: @x, y: @y
-		return  if (cell.nil?)
-		# DEV
+		if (cell.nil?)
+			decr_vel [:x,:y]
+			return
+		end
 
 		## Move towards point
 		vels = []

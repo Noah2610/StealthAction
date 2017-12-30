@@ -217,6 +217,16 @@ class Entity
 	end
 
 	def incr_vel dirs
+		# Remove opposite dirs: (:left && :right) || (:up && :down)
+		if (dirs.include?(:up) && dirs.include?(:down))
+			dirs.delete :up
+			dirs.delete :down
+		end
+		if (dirs.include?(:left) && dirs.include?(:right))
+			dirs.delete :left
+			dirs.delete :right
+		end
+
 		dirs.each do |dir|
 			case dir
 			when :up
@@ -302,6 +312,12 @@ class Entity
 	end
 
 	def draw
+		# Return if outside camera view
+		if (((@x + @w) < $camera.x) || (@x > ($camera.x + $camera.w)) ||
+				((@y + @h) < $camera.y) || (@y > ($camera.y + $camera.h)))
+			return
+		end
+
 		# Draw entity
 		if (@image)
 			scale = draw_scale

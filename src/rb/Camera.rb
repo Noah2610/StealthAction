@@ -1,10 +1,12 @@
 
 class Camera
-	attr_reader :x,:y
+	attr_reader :x,:y,:w,:h
 
 	def initialize args = {}
 		@x = args[:x] || 0  #$settings.screen[:w] / 2
 		@y = args[:x] || 0  #$settings.screen[:h] / 2
+		@w = args[:w] || $settings.screen[:w]
+		@h = args[:h] || $settings.screen[:h]
 		@step = args[:step] || $settings.camera(:step)
 	end
 
