@@ -36,6 +36,8 @@ class Game < Gosu::Window
 
 		puts "Level: #{@level.name}"
 		puts "  Room: #{@room.name}"
+		puts "INSTANCE_COUNT:\n\tsolid:\t\t#{@room.instances[:solid].size}"
+		puts "\tpassable:\t#{@room.instances[:passable].size}"
 
 		## Init Pathfinder
 		#@pathfind.pathfind_init
@@ -56,6 +58,9 @@ class Game < Gosu::Window
 
 		## Font for FPS display
 		@font_fps = Gosu::Font.new 32
+
+		## For consequtive updating of entities, instead of all at once
+		#@update_entity_index = 0
 	end
 
 	def load_level name = :sample, dir = DIR[:levels]
@@ -127,6 +132,8 @@ class Game < Gosu::Window
 				switch_room
 				puts "Level: #{@level.name}"
 				puts "  Room: #{@room.name}"
+				puts "INSTANCE_COUNT:\n\tsolid:\t\t#{@room.instances[:solid].size}"
+				puts "\tpassable:\t#{@room.instances[:passable].size}"
 			end
 		end
 	end
@@ -168,9 +175,12 @@ class Game < Gosu::Window
 
 		# Update entities (and player)
 		@entities.each &:update           #if ($update_counter % 4 == 0)
+		#@entities[@update_entity_index].update
+		#@update_entity_index += 1
+		#@update_entity_index = 0  if (@update_entity_index >= @entities.size)
 
 		# Update room
-		@room.update             if ($update_counter % 4 == 0 && !@room.nil?)
+		@room.update              if ($update_counter % 4 == 0 && !@room.nil?)
 
 =begin
 		if ($update_counter % 16 == 0)

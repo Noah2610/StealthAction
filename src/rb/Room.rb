@@ -8,9 +8,9 @@ class Room
 		@y = args[:y] || 0
 		@w = args[:w] || $settings.rooms(:w)
 		@h = args[:h] || $settings.rooms(:h)
-		@instances = args[:instances] || []
+		@instances = sort_instances args[:instances] || {}
 
-		@instances.each { |inst| inst.set_room self }
+		get_instances(:all).each { |inst| inst.set_room self }
 
 		@z = 10
 		@bg = $settings.rooms :bg
@@ -20,12 +20,16 @@ class Room
 
 	def get_instances target
 		case target
+		when :all
+			return @instances.values.flatten
 		when :solid
+			return @instances[:solid]
 			return solid_instances
 		when :passable
+			return @instances[:passable]
 			return passable_instances
 		when :doors
-			return @instances.map do |instance|
+			return @instances[:passable].map do |instance|
 				next instance  if (instance.is_a? DoorInst)
 			end .reject { |v| v.nil? || !v.check_collision? }
 		else
@@ -34,19 +38,21 @@ class Room
 	end
 
 	def get_spawn
-		@instances.each do |instance|
+		@instances[:passable].each do |instance|
 			return instance  if (instance.is_a? SpawnInst)
 		end
 		return nil
 	end
 
 	def solid_instances
+		return @instances[:solid]
 		return @instances.map do |instance|
 			next instance  if (instance.is_solid?)
 		end .reject { |v| v.nil? || !v.check_collision? }
 	end
 
 	def passable_instances
+		return @instances[:passable]
 		return @instances.map do |instance|
 			next instance  if (instance.is_passable?)
 		end .reject { |v| v.nil? || !v.check_collision? }
@@ -54,9 +60,25 @@ class Room
 
 	def find_instances_by_class klass
 		return  unless (klass.is_a? Class)
-		return @instances.map do |instance|
+		return get_instances(:all).map do |instance|
 			next instance  if (instance.is_a? klass)
 		end .reject { |v| v.nil?  }
+	end
+
+	def sort_instances instances
+		return {}  if (instances.nil? || instances.empty?)
+		ret = {
+			solid:    [],
+			passable: []
+		}
+		instances.each do |instance|
+			if (instance.is_passable?)
+				ret[:passable] << instance
+			elsif (instance.is_solid?)
+				ret[:solid] << instance
+			end
+		end
+		return ret
 	end
 
 	def draw_pos axis
@@ -71,7 +93,7 @@ class Room
 	end
 
 	def update
-		@instances.each &:update
+		get_instances(:all).each &:update
 
 		# Custom update function of child class
 		update_custom  if (defined? update_custom)
@@ -81,7 +103,7 @@ class Room
 		# Draw room background
 		Gosu.draw_rect draw_pos(:x), draw_pos(:y), @w,@h, @bg, @z
 		# Draw instances (walls, ...)
-		@instances.each &:draw
+		get_instances(:all).each &:draw
 
 		# Custom draw function of child class
 		draw_custom  if (defined? draw_custom)

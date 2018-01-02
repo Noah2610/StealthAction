@@ -313,10 +313,12 @@ class Entity
 
 	def draw
 		# Return if outside camera view
+=begin
 		if (((@x + @w) < $camera.x) || (@x > ($camera.x + $camera.w)) ||
 				((@y + @h) < $camera.y) || (@y > ($camera.y + $camera.h)))
 			return
 		end
+=end
 
 		# Draw entity
 		if (@image)
