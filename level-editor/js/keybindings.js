@@ -4,20 +4,20 @@ var mult = 0;
 var controls = {};
 const valid_keys = [
 	"h","j","k","l",
+	"H","J","K","L",
 	"ArrowLeft","ArrowDown","ArrowUp","ArrowRight",
 	"g","G",
-	"H","L","M","m",
+	"M","m",
 	"0","$",
 	" ","Enter",
 	"x","Backspace",
-	"p",
-	"b",
+	"p","b",
 	"d","D",
 	"s","S",
 	"a","A",
 	"q","Q",
 	"n","N",
-	"r",
+	"r","R",
 	"O","W"
 ];
 const keys_max_length = 2;
@@ -63,10 +63,8 @@ function switch_block_offset() {
 
 function increase_box_size(axis) {
 	var step = box_size_step;
-	if (axis == "W" || axis == "H") {
+	if (axis == "W" || axis == "H")
 		axis = axis.toLowerCase();
-		step = settings.box_size[axis];
-	}
 	settings.box_size[axis] += step;
 	update_panel();
 	update_grid();
@@ -74,10 +72,8 @@ function increase_box_size(axis) {
 }
 function decrease_box_size(axis) {
 	var step = box_size_step;
-	if (axis == "W" || axis == "H") {
+	if (axis == "W" || axis == "H")
 		axis = axis.toLowerCase();
-		step = settings.box_size[axis];
-	}
 	if (settings.box_size[axis] - step >= min_box_size) {
 		settings.box_size[axis] -= step;
 		update_panel();

@@ -23,41 +23,41 @@
 	"increase_box_size": {
 		"w": ["dl","dArrowRight"],
 		"h": ["dj","dArrowDown"],
-		"W": ["Dl","DArrowRight"],
-		"H": ["Dj","DArrowDown"]
+		"W": ["Dl","dL","DL","DArrowRight"],
+		"H": ["Dj","dJ","DJ","DArrowDown"]
 	},
 	"decrease_box_size": {
 		"w": ["dh","dArrowLeft"],
 		"h": ["dk","dArrowUp"],
-		"W": ["Dh","DArrowLeft"],
-		"H": ["Dk","DArrowUp"]
+		"W": ["Dh","dH","DH","DArrowLeft"],
+		"H": ["Dk","dK","DK","DArrowUp"]
 	},
 	"increase_block_size": {
 		"w": ["sl","sArrowRight"],
 		"h": ["sj","sArrowDown"],
-		"W": ["Sl","SArrowRight"],
-		"H": ["Sj","SArrowDown"]
+		"W": ["Sl","sL","SL","SArrowRight"],
+		"H": ["Sj","sJ","SJ","SArrowDown"]
 	},
 	"decrease_block_size": {
 		"w": ["sh","sArrowLeft"],
 		"h": ["sk","sArrowUp"],
-		"W": ["Sh","SArrowLeft"],
-		"H": ["Sk","SArrowUp"]
+		"W": ["Sh","sH","SH","SArrowLeft"],
+		"H": ["Sk","sK","SK","SArrowUp"]
 	},
 	"increase_block_offset": {
 		"x": ["al","aArrowRight"],
 		"y": ["aj","aArrowDown"],
-		"X": ["Al","AArrowRight"],
-		"Y": ["Aj","AArrowDown"]
+		"X": ["Al","aL","AL","AArrowRight"],
+		"Y": ["Aj","aJ","AJ","AArrowDown"]
 	},
 	"decrease_block_offset": {
 		"x": ["ah","aArrowLeft"],
 		"y": ["ak","aArrowUp"],
-		"X": ["Ah","AArrowLeft"],
-		"Y": ["Ak","AArrowUp"]
+		"X": ["Ah","aH","AH","AArrowLeft"],
+		"Y": ["Ak","aK","AK","AArrowUp"]
 	},
 	"reset": {
-		"all":          ["rr"],
+		"all":          ["rr","R"],
 		"box_size":     ["rd","dr"],
 		"block_size":   ["rs","sr"],
 		"block_offset": ["ra","ar"]
