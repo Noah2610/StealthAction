@@ -3,7 +3,7 @@
 require 'gosu'
 require 'json'
 require 'yaml'
-require 'byebug'
+#require 'byebug'
 
 ROOT = File.dirname(File.absolute_path(__FILE__))
 
