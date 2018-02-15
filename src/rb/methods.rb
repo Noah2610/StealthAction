@@ -14,11 +14,25 @@ end
 
 
 ## Require all .rb files in dir directory
-def require_files dir
+def require_files dir, args = {}
+	recursive = !!args[:recursive]
+	except = args[:except] || []
+	except = [except]  unless (except.is_a? Array)
+	dirs = []
 	if (File.directory? dir)
 		Dir.new(dir).each do |file|
 			filepath = File.join dir, file
-			require filepath  if (File.file?(filepath) && file =~ /\A\S+\.rb\z/)
+			next  if (except.include? filepath)
+			if (File.file?(filepath))
+				require filepath  if (file =~ /\A\S+\.rb\z/)
+			elsif (File.directory?(filepath))
+				if (recursive && !(filepath =~ /\A.*\/?\.{1,2}\z/))
+					dirs << filepath
+				end
+			end
+		end
+		dirs.each do |dir|
+			require_files dir, except: except, recursive: true
 		end
 	end
 end

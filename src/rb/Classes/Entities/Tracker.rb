@@ -15,9 +15,11 @@ class Tracker < Entity
 		@update_counter_custom = 0
 	end
 
+=begin
 	def reset
 		@pathfinder = Pathfinder.new
 	end
+=end
 
 	def find_cell args
 		ret = nil
