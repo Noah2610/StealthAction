@@ -1,6 +1,4 @@
 
-require File.join(DIR[:modules], 'Pathfinding/PathfinderExtension')
-
 class Pathfinder
 	def initialize args = {}
 		@cell_size = args[:cell_size] || {

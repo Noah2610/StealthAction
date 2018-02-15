@@ -21,6 +21,29 @@ DIR = {
 	samples:    File.join(ROOT, 'src/samples')
 }
 
+## Require game files
+require File.join DIR[:rb], 'methods'
+require File.join DIR[:modules], 'Collision'
+## Modules
+require_files(
+	File.join(DIR[:modules]),
+	recursive: true,
+	except: File.join(DIR[:modules], 'Collision.rb')
+)
+## Classes
+require_files(
+	File.join(DIR[:classes]),
+	recursive: true
+)
+## rb
+require_files(
+	File.join(DIR[:rb]),
+	except: File.join(DIR[:rb], 'main.rb')
+)
+## main
+require File.join(DIR[:rb], 'main')
+
+
 #require File.join DIR[:rb], 'methods'
 ### Modules
 #require_files DIR[:modules]
@@ -37,23 +60,4 @@ DIR = {
 #require_files DIR[:entities]
 #require File.join(DIR[:rb], 'Level')
 #require File.join(DIR[:rb], 'Camera')
-
-require File.join DIR[:rb], 'methods'
-## Modules
-require_files(
-	File.join(DIR[:modules]),
-	recursive: true
-)
-## Classes
-require_files(
-	File.join(DIR[:classes]),
-	recursive: true
-)
-## rb
-require_files(
-	File.join(DIR[:rb]),
-	except: File.join(DIR[:rb], 'main.rb')
-)
-## main
-require File.join(DIR[:rb], 'main')
 
