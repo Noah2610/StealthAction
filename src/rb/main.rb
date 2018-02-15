@@ -44,13 +44,17 @@ class Game < Gosu::Window
 		## Add Solid blocks to pathfind grid (bootstrap it)
 		#@pathfind.add_solids @room.get_instances(:solid)
 
+		tracker0 = Tracker.new pos: @player.pos, track: @player
+		tracker1 = Tracker.new pos: @player.pos, track: tracker0
+		tracker2 = Tracker.new pos: @player.pos, track: tracker1
+		tracker3 = Tracker.new pos: @player.pos, track: tracker2
+		tracker4 = Tracker.new pos: @player.pos, track: tracker3
+		tracker5 = Tracker.new pos: @player.pos, track: tracker4
+
 		@entities = [
 			@player,
 			Enemy.new,
-			Tracker.new(x: 16, y: 16),
-			Tracker.new(x: 128, y: 128),
-			Tracker.new(x: 128, y: 32),
-			Tracker.new(x: 64, y: 256)
+			tracker0, tracker1, tracker2, tracker3, tracker3, tracker4, tracker5
 		]
 
 		## Move camera to player

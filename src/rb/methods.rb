@@ -1,11 +1,11 @@
 
 ## Add sign method to Integers and Floats
-class ::Integer
+class Integer
 	def sign
 		return (self / self.abs)  unless (self == 0)
 		return self
 	end end
-class ::Float
+class Float
 	def sign
 		return (self / self.abs)  unless (self == 0.0)
 		return self
@@ -15,10 +15,10 @@ end
 
 ## Require all .rb files in dir directory
 def require_files dir
-	if (Dir.exists? dir)
+	if (File.directory? dir)
 		Dir.new(dir).each do |file|
 			filepath = File.join dir, file
-			require filepath  if (file =~ /\A\S+\.rb\z/ && File.exists?(filepath))
+			require filepath  if (File.file?(filepath) && file =~ /\A\S+\.rb\z/)
 		end
 	end
 end

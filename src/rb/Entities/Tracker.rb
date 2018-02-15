@@ -1,22 +1,23 @@
 
 class Tracker < Entity
+
 	def init args = {}
 		@image = $settings.images :s_dev_worm
 		@path = nil
-		@pathfinder = Pathfind.new
+		@pathfinder = Pathfinder.new
 		@check_collision = true
 
 		@max_vel = { x: 2, y: 2 }
 		@vel_incr = { x: 0.5, y: 0.5 }
 
+		@to_track = args[:track] || player
+
 		@update_counter_custom = 0
 	end
 
-=begin
 	def reset
-		@pathfinder = Pathfind.new
+		@pathfinder = Pathfinder.new
 	end
-=end
 
 	def find_cell args
 		ret = nil
@@ -113,7 +114,7 @@ class Tracker < Entity
 		#end
 
 		## Update pathfind path
-		@path = pathfind to: player  if (@update_counter_custom % @pathfind_interval == 0)
+		@path = pathfind to: @to_track  if (@update_counter_custom % @pathfind_interval == 0)
 
 		move_path                    if (@update_counter_custom % @move_interval)
 
@@ -121,6 +122,7 @@ class Tracker < Entity
 	end
 
 	def draw_custom
+=begin
 		unless (@path.nil?)
 			@path.each do |cell|
 				Gosu.draw_rect (cell.pos(:x)-4-$camera.x),(cell.pos(:y)-4-$camera.y), (cell.size(:w)-8),(cell.size(:h)-8), $settings.colors(:red_light), 100
@@ -129,6 +131,7 @@ class Tracker < Entity
 			cell = find_closest_cell by: :pos, x: @x, y: @y
 			Gosu.draw_rect cell.pos(:x)+8-$camera.x,cell.pos(:y)+8-$camera.y, cell.size(:w)-16,cell.size(:h)-16, $settings.colors(:green_light), 200  unless (cell.nil?)
 		end
+=end
 	end
 end
 
