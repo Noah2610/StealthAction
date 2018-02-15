@@ -1,6 +1,7 @@
 #!/bin/bash
 
-files_rb=("./StealthAction.rb" "./src/rb/*rb" "./src/rb/Rooms/*" "./src/rb/Instances/*" "./src/rb/Entities/*" "./src/rb/Pathfinding/*" "./src/rb/Modules/*")
+IFS=$'\n'
+files_rb=($( find "./src/rb/" -iname "*.rb" ))
 files_js=("./level-editor/index.html" "./level-editor/keybindings.html" "./level-editor/keybindings.json" "./level-editor/css/*" "./level-editor/js/*")
 
 if [[ "$1" =~ rb|ruby|game ]]; then

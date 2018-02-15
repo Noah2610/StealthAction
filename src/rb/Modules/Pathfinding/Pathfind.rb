@@ -1,5 +1,7 @@
 
-class Pathfind
+require File.join(DIR[:modules], 'Pathfinding/PathfinderExtension')
+
+class Pathfinder
 	def initialize args = {}
 		@cell_size = args[:cell_size] || {
 			w: (args[:w] || 32),
@@ -9,7 +11,7 @@ class Pathfind
 	end
 
 	def pathfind_init args = {}
-		@grid = PathfindGrid.new cell_size: @cell_size
+		@grid = Grid.new cell_size: @cell_size
 		add_solids current_room.get_instances(:solid)
 	end
 
@@ -36,7 +38,7 @@ class Pathfind
 			cell = open_set.first
 			open_set.each do |open_cell|
 				if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost && open_cell.h_cost < cell.h_cost))
-				#if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost))
+					#if ((open_cell.f_cost < cell.f_cost) || (open_cell.f_cost == cell.f_cost))
 					cell = open_cell  if (open_cell.h_cost < cell.h_cost)
 				end
 			end
@@ -142,5 +144,11 @@ class Pathfind
 
 	def draw
 	end
+
+	private
+
+		## Include modules with classes
+		include PathfinderExtension
+
 end
 

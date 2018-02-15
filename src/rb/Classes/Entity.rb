@@ -3,10 +3,10 @@ class Entity
 	include Collision
 
 	def initialize args = {}
-		@x = args[:x] || 0
-		@y = args[:y] || 0
-		@w = args[:w] || $settings.entities(:w)
-		@h = args[:h] || $settings.entities(:h)
+		@x = args[:x] || (args[:pos] ? args[:pos][:x] : nil ) || 0
+		@y = args[:y] || (args[:pos] ? args[:pos][:y] : nil ) || 0
+		@w = args[:w] || (args[:pos] ? args[:pos][:w] : nil ) || $settings.entities(:w)
+		@h = args[:h] || (args[:pos] ? args[:pos][:h] : nil ) || $settings.entities(:h)
 
 		@image = nil
 
@@ -32,7 +32,7 @@ class Entity
 	end
 
 	def reset
-		@pathfinder = Pathfind.new  unless (@pathfinder.nil?)
+		@pathfinder = Pathfinder.new  unless (@pathfinder.nil?)
 	end
 
 	def pos axis = :all
