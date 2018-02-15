@@ -8,13 +8,6 @@ z-indices:
 	player:         30
 
 TODO:
-	- enemies, items, floors, ...
-	- movement velocity
-	- FIX collision with instances smaller than player
-	- Glitchiness with player collision_padding
-Level-Editor:
-	- loading levels
-	(- web server
-		- save level on server
-		- prompt user for download )
+	- Bug with glitching through walls with player collision_padding
+	- GAME CONTENT / GAMEPLAY / FEATURES
 
