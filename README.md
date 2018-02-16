@@ -3,6 +3,24 @@ __WORK IN PROGRESS__
 
 ---
 
+## Table Of Contents
+* [Description](#description)
+* [The Game](#the-game)
+  * [Installation](#installation)
+    * [Dependencies](#dependencies)
+    * [Installing and Running the Application](#installing-and-running-the-application)
+  * [Command-Line Usage](#command-line-usage)
+    * [Synopsis](#synopsis)
+    * [Arguments](#arguments)
+  * [In-Game / Gameplay](#in-game--gameplay)
+    * [Controls](#controls)
+* [The Level Editor](#the-level-editor)
+  * [Usage](#usage)
+* [Credits](#credits)
+* [Afterword](#afterword)
+
+---
+
 ## Description
 This is a 2D game written in Ruby using the gem [Gosu](https://www.libgosu.org/index.html).  
 It is very early in development and is currently set on hold, due to lack of time.  
